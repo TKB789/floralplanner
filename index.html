@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A study, workout, cooking and cleaning planner that grows a bouquet over the year.">
+<meta name="theme-color" content="#FFFFFD">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%BC%3C/text%3E%3C/svg%3E">
+<title>A year in bloom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFD; --dot:#D6D6CF; --ink:#141414; --ink2:#67675F; --wash:#F2F2EC;
+  --line:#E0E0D8; --pre:#E3EAD9; --leaf:#DDE9D2;
+  --disp:"Fraunces",Georgia,"Times New Roman",serif;
+  --hand:"Patrick Hand","Segoe Print","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#191917; --dot:#35352F; --ink:#EDEDE6; --ink2:#A4A49A; --wash:#23231F;
+    --line:#35352F; --pre:#2D3428; --leaf:#2A3326;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191917; --dot:#35352F; --ink:#EDEDE6; --ink2:#A4A49A; --wash:#23231F;
+  --line:#35352F; --pre:#2D3428; --leaf:#2A3326;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;color:var(--ink);font-family:var(--disp);font-size:16px;line-height:1.6;
+  background:radial-gradient(circle,var(--dot) 1px,transparent 1.3px) 0 0/18px 18px,var(--paper);
+  background-color:var(--paper);-webkit-font-smoothing:antialiased;
+  font-variation-settings:"opsz" 14;
+}
+.wrap{max-width:560px;margin:0 auto;padding:22px 16px 80px}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;border-radius:6px}
+svg{max-width:100%}
+
+/* header */
+header{text-align:center;margin-bottom:10px}
+h1{
+  font-family:var(--disp);font-weight:750;font-size:clamp(2.3rem,11vw,3.3rem);line-height:1;
+  letter-spacing:-0.02em;margin:0;font-variation-settings:"opsz" 144;
+  text-shadow:2px 2px 0 var(--paper),3.5px 3.5px 0 var(--ink);
+}
+.span{font-family:var(--hand);font-size:1.15rem;color:var(--ink2);margin:8px 0 0}
+
+nav{display:flex;justify-content:center;gap:4px;margin:18px 0 22px;flex-wrap:wrap}
+nav button{
+  background:none;border:0;padding:6px 12px 8px;font-family:var(--hand);font-size:1.2rem;
+  color:var(--ink2);cursor:pointer;position:relative;
+}
+nav button[aria-selected="true"]{color:var(--ink)}
+nav button[aria-selected="true"]::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;background:var(--ink);
+  border-radius:2px;transform:rotate(-1.2deg);
+}
+.view{display:none}
+.view.on{display:block}
+
+h2{font-family:var(--disp);font-weight:700;font-size:1.55rem;line-height:1.15;letter-spacing:-0.015em;
+  margin:0 0 6px;font-variation-settings:"opsz" 72}
+h3{font-family:var(--disp);font-weight:650;font-size:1.12rem;margin:26px 0 6px;font-variation-settings:"opsz" 36}
+p{margin:0 0 12px}
+.muted{color:var(--ink2)}
+.hand{font-family:var(--hand)}
+.small{font-size:.86rem}
+
+/* bouquet */
+.bq{display:block;width:100%;height:auto;margin:0 auto}
+.bq .fl{cursor:pointer}
+.bq .fl:hover .ctr{fill:var(--wash)}
+.ink{stroke:var(--ink);fill:none}
+.pf{fill:var(--paper)}
+.pre{fill:var(--pre)}
+.leaf{fill:var(--leaf)}
+.inkfill{fill:var(--ink)}
+.lbl{font-family:var(--hand);fill:var(--ink);font-size:17px}
+.num{font-family:var(--disp);fill:var(--ink);font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.num.faint{fill:var(--ink2)}
+.sum{text-align:center;font-family:var(--hand);font-size:1.15rem;margin:4px 0 0}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;margin:16px 0 0;
+  font-family:var(--hand);font-size:1.02rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:1.3px solid var(--ink);display:inline-block}
+
+/* month */
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mhead h2{margin:0;text-align:center;flex:1}
+.circ{background:var(--paper);border:1.5px solid var(--ink);border-radius:50%;width:38px;height:38px;
+  cursor:pointer;font-size:1.1rem;line-height:1;flex:0 0 auto}
+.circ:disabled{opacity:.3;cursor:default}
+.back{background:none;border:0;font-family:var(--hand);font-size:1.1rem;color:var(--ink2);cursor:pointer;padding:4px 0;margin-bottom:8px}
+.back:hover{color:var(--ink)}
+.petal{cursor:pointer}
+.petal:focus-visible{outline:none}
+.petal:focus-visible path{stroke-width:3}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:-6px 0 8px;flex-wrap:wrap}
+.ghead p{margin:0;font-size:1.08rem;color:var(--ink2)}
+.tolist{font-family:var(--hand);font-size:1.1rem;color:var(--ink2)}
+.seg{display:flex;justify-content:center;gap:0;margin:0 auto 14px;border:1.5px solid var(--ink);border-radius:99px;width:max-content;max-width:100%;overflow:hidden;background:var(--paper)}
+.seg button{background:none;border:0;padding:6px 16px;font-family:var(--hand);font-size:1.1rem;cursor:pointer;color:var(--ink2)}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.ahead{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 6px;font-size:1.05rem}
+.ahead b{min-width:1.6em;text-align:center;font-weight:650}
+.circ.sm{width:30px;height:30px;font-size:1rem}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mt{text-align:center}.mt h2{margin:0}.mt p{margin:0;font-size:1.05rem}
+.bq.one{max-width:420px}
+.past{margin-top:44px;padding-top:24px;border-top:1.5px dashed var(--ink)}
+.past h3{font-family:var(--hand);font-weight:400;font-size:1.25rem}
+.daypanel{margin-top:30px;padding-top:24px;border-top:1.5px dashed var(--ink);scroll-margin-top:12px}
+
+/* day */
+.dayhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.dayhead h2{margin:0}
+.dnav{display:flex;gap:6px;flex:0 0 auto;padding-top:4px}
+.ctx{font-family:var(--hand);font-size:1.1rem;color:var(--ink2);margin:4px 0 0}
+.due{display:inline-block;margin-top:8px;padding:3px 12px;border:1.5px solid var(--ink);border-radius:14px;
+  font-family:var(--hand);font-size:1.05rem;background:var(--paper)}
+.jump{background:none;border:0;padding:0;font-family:var(--hand);font-size:1.05rem;text-decoration:underline;
+  text-underline-offset:3px;cursor:pointer;color:var(--ink2);margin-top:6px}
+
+.score{display:flex;align-items:center;gap:16px;margin:20px 0 6px;padding:14px 16px;
+  border:1.5px solid var(--ink);border-radius:18px 22px 16px 24px;background:var(--paper)}
+.score svg{flex:0 0 auto;width:58px;height:80px}
+.score .tier{font-family:var(--disp);font-weight:700;font-size:1.3rem;line-height:1.15;margin:0}
+.score .pts{margin:2px 0 0;font-size:.95rem}
+.score .next{margin:4px 0 0;font-family:var(--hand);font-size:1.05rem;color:var(--ink2)}
+.meter{height:6px;border-radius:9px;background:var(--wash);margin-top:8px;overflow:hidden;border:1px solid var(--line)}
+.meter i{display:block;height:100%;background:var(--ink)}
+
+.group{font-family:var(--hand);font-size:1.25rem;margin:26px 0 4px;display:flex;align-items:center;gap:10px}
+.group::after{content:"";flex:1;height:0;border-top:1.5px dashed var(--line)}
+ul.items{list-style:none;margin:0;padding:0}
+ul.items li{display:grid;grid-template-columns:62px 30px 1fr;gap:0 10px;align-items:start;padding:10px 0}
+ul.items li+li{border-top:1px solid var(--line)}
+.t{font-size:.84rem;color:var(--ink2);padding-top:3px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.box{width:28px;height:28px;border:1.8px solid var(--ink);border-radius:9px 7px 10px 8px;background:var(--paper);
+  cursor:pointer;padding:0;position:relative}
+.box:disabled{opacity:.35;cursor:default}
+.box[aria-pressed="true"]{background:var(--ink)}
+.box[aria-pressed="true"]::after{content:"";position:absolute;left:9px;top:4px;width:6px;height:12px;
+  border:solid var(--paper);border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+.it .nm{font-weight:600;display:block;line-height:1.35}
+.it .sb{display:block;font-size:.86rem;color:var(--ink2);margin-top:2px;line-height:1.45}
+.pp{display:inline-flex;gap:3px;margin-left:6px;vertical-align:1px}
+.pp i{width:8px;height:8px;border:1.2px solid var(--ink);border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:inline-block}
+li.on .nm{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--ink2)}
+li.brk .it .nm{font-style:italic}
+ul.items li.info{grid-template-columns:62px 1fr}
+li.info .it{padding:8px 12px;border:1.5px dashed var(--line);border-radius:12px;color:var(--ink2);font-size:.92rem}
+.tag{font-family:var(--hand);font-size:.95rem;color:var(--ink2);margin-left:4px}
+
+/* plan & tips */
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:8px 6px;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:650}
+.tw{overflow-x:auto}
+.tiers li{display:flex;gap:12px;align-items:center;padding:8px 0}
+.tiers li+li{border-top:1px solid var(--line)}
+.tiers{list-style:none;padding:0;margin:8px 0 0}
+.tiers .sw{width:22px;height:22px;flex:0 0 auto}
+.tiers b{font-weight:650}
+.card{border:1.5px solid var(--ink);border-radius:20px 16px 22px 18px;padding:16px 18px;margin:16px 0;background:var(--paper)}
+.card h3{margin-top:0}
+.card p:last-child{margin-bottom:0}
+ol.tips{padding-left:0;list-style:none;counter-reset:t;margin:0}
+ol.tips li{counter-increment:t;padding:14px 0 14px 44px;position:relative}
+ol.tips li+li{border-top:1px solid var(--line)}
+ol.tips li::before{content:counter(t);position:absolute;left:0;top:12px;width:30px;height:30px;border:1.5px solid var(--ink);
+  border-radius:50%;text-align:center;font-family:var(--hand);font-size:1.1rem;line-height:28px}
+ol.tips b{display:block;font-weight:650;margin-bottom:2px}
+a{color:var(--ink);text-underline-offset:3px}
+.src{font-size:.82rem;color:var(--ink2)}
+.form{display:grid;grid-template-columns:1fr auto;gap:10px 14px;align-items:center;margin-top:10px}
+.form input{font-family:var(--disp);font-size:1rem;padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;
+  background:var(--paper);color:var(--ink);min-width:0}
+.btn{font-family:var(--hand);font-size:1.15rem;background:var(--ink);color:var(--paper);border:0;border-radius:12px;
+  padding:8px 20px;cursor:pointer;margin-top:14px}
+ul.dl{list-style:none;margin:0;padding:0}
+ul.dl li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:.93rem}
+ul.dl li+li{border-top:1px solid var(--line)}
+ul.dl .d{color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
+footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink2);font-size:1rem}
+
+@media (prefers-reduced-motion:no-preference){
+  .box{transition:background-color .15s ease}
+  .box[aria-pressed="true"]{animation:pop .22s ease}
+  @keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .score path.fillp{transition:fill .4s ease}
+  .meter i{transition:width .35s ease}
+  .bloomin{animation:bloom .9s cubic-bezier(.3,1.4,.5,1) both}
+  @keyframes bloom{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="mottle" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#A2A29B"/>
+      <circle cx="3" cy="4" r="2.4" fill="#86867F"/>
+      <circle cx="10" cy="9" r="3" fill="#B9B9B2"/>
+      <circle cx="11" cy="2" r="1.3" fill="#7A7A73"/>
+      <circle cx="4" cy="11" r="1.6" fill="#8F8F88"/>
+    </pattern>
+<pattern id="speck0" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#6E4B2E"/>
+      <circle cx="3" cy="3" r="1.6" fill="#4F3420"/>
+      <circle cx="9" cy="8" r="2.2" fill="#86603E"/>
+      <circle cx="2" cy="10" r="1" fill="#4F3420"/>
+    </pattern>
+    <pattern id="speck1" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#58391F"/>
+      <circle cx="4" cy="3" r="1.6" fill="#3D2614"/>
+      <circle cx="9" cy="7" r="2.2" fill="#6F4C2F"/>
+      <circle cx="2" cy="10" r="1" fill="#3D2614"/>
+    </pattern>
+    <pattern id="speck2" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#7A5534"/>
+      <circle cx="3" cy="3" r="1.6" fill="#5A3C22"/>
+      <circle cx="9" cy="8" r="2.2" fill="#936B47"/>
+      <circle cx="2" cy="10" r="1" fill="#5A3C22"/>
+    </pattern>
+    <pattern id="speck3" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#4E3524"/>
+      <circle cx="4" cy="3" r="1.6" fill="#35231A"/>
+      <circle cx="9" cy="7" r="2.2" fill="#654835"/>
+      <circle cx="2" cy="10" r="1" fill="#35231A"/>
+    </pattern>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header>
+    <h1>A year in bloom</h1>
+    <p class="span" id="span">—</p>
+  </header>
+
+  <nav role="tablist">
+    <button role="tab" aria-selected="true" data-v="bouquet">Garden</button>
+    <button role="tab" aria-selected="false" data-v="plan">The plan</button>
+    <button role="tab" aria-selected="false" data-v="tips">Tips</button>
+  </nav>
+
+  <section class="view on" id="v-bouquet"></section>
+  <section class="view" id="v-plan"></section>
+
+  <section class="view" id="v-tips">
+    <h2>Making time for everything</h2>
+    <p class="muted">The schedule in this planner is built from these. Breaks are points, not slack — skipping them costs you color.</p>
+    <ol class="tips">
+      <li><b>Work in short sprints with a real break after each.</b>Every study block here is 25 minutes, then 5 off. In one small experiment, people given a 5-minute break every 20 minutes got more done in two hours than when breaks were up to them — and they wandered off less on their own. <span class="src"><a href="https://pubmed.ncbi.nlm.nih.gov/37167429/" target="_blank" rel="noopener">PubMed, 2023</a></span></li>
+      <li><b>Take a longer break about every hour and a half.</b>After three sprints you get 15 minutes away from the screen. MIT's Robert Pozen suggests roughly a 15-minute pause every 75–90 minutes, since focus tends to fade on about that cycle. <span class="src"><a href="https://www.work-fit.com/blog/how-effective-breaks-at-work-increase-productivity/" target="_blank" rel="noopener">Work-Fit</a></span></li>
+      <li><b>Spread studying across the week instead of one long night.</b>The same hours split into small daily sessions are remembered far better than one big block — which is why there's a study sprint every day, not a Sunday marathon. <span class="src"><a href="https://www.retrievalpractice.org/strategies/optimal-spacing" target="_blank" rel="noopener">Retrieval Practice</a></span></li>
+      <li><b>Test yourself instead of rereading.</b>Pulling ideas out of memory strengthens them more than highlighting or rereading does. Your one-page summaries and cheat sheets are written from memory first, then checked. <span class="src"><a href="https://evidencebased.education/resource/retrieval-and-spaced-practice-study-strategies-that-must-be-combined/" target="_blank" rel="noopener">Evidence Based Education</a></span></li>
+      <li><b>Make breaks move you.</b>Stand, walk, refill water. A review of 80+ studies found regular breaks help both well-being and performance, but most people skip them or take the wrong kind. <span class="src"><a href="https://hbr.org/2023/05/how-to-take-better-breaks-at-work-according-to-research" target="_blank" rel="noopener">Harvard Business Review</a></span></li>
+      <li><b>Cut homework into named steps.</b>"Do HW 4" is hard to start. "Read every question," "load the data," "first model," "write up" each fit inside one sprint, so every sitting ends with something done.</li>
+      <li><b>Cook once, eat three times.</b>Sunday's 90-minute prep covers the weekday protein and sides, so weeknight cooking is a 10-minute snack, not an hour.</li>
+      <li><b>Clean in ten-minute pieces.</b>One small chore a day plus a nightly kitchen reset keeps Sunday's reset to 45 minutes.</li>
+      <li><b>Submit early; use your drops on purpose.</b>Homework is due 11 pm Pacific on Wednesdays, but the plan aims for 9 pm. Your two lowest homework grades are dropped — treat those as planned relief for a rough week, not something to spend by accident.</li>
+      <li><b>Plan tomorrow tonight.</b>Five minutes before bed: look at tomorrow's list, move anything that won't fit, and decide which sprint matters most.</li>
+    </ol>
+  </section>
+
+  <footer id="sync">Progress is saved in this browser</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- constants ---------- */
+var KEY="year-in-bloom-v1";
+var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var DOW=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var BROWN_LIGHT=["#B98552","#A8703F","#C69A6B","#9A6A3E"];   // wilting: caramel, cinnamon, tan, toffee
+var BROWN_DARK=["speck0","speck1","speck2","speck3"];          // wilted: walnut, chocolate, umber, coffee
+function pick(arr,ds){var d=parse(ds);return arr[(d.getDate()*5+d.getMonth()*3)%arr.length]}
+var PTS={study:2,move:3,cook:1,clean:1,brk:1,plan:1};
+var TIERS=[
+  {k:"full",   min:.90,name:"Full bloom",  note:"Vibrant — the month's own color"},
+  {k:"bloom",  min:.75,name:"In bloom",    note:"Bright, a little lighter"},
+  {k:"fading", min:.55,name:"Fading",      note:"Dusty, starting to brown"},
+  {k:"wilting",min:.35,name:"Wilting",     note:"Light browns — caramel, tan, cinnamon"},
+  {k:"wilted", min:.01,name:"Wilted",      note:"Dark browns — walnut, chocolate, umber — speckled"},
+  {k:"gray",   min:0,  name:"Gray",        note:"Nothing checked off"}
+];
+var TOPICS=[null,"Introduction & classification","Validation & clustering","Basic data prep & change detection",
+  "Time series models","Basic regression","Advanced data prep","Advanced regression & tree models",
+  "Variable selection","Design of experiments & probability models","Missing data & optimization",
+  "Optimization & advanced models","Case: power company","Case: retailer","Case: monetization","Course summary"];
+var QUIZ=[
+  {name:"Midterm 1",open:"2026-10-08",close:"2026-10-18",day:"2026-10-17",len:90,cover:"modules 1–10"},
+  {name:"Midterm 2",open:"2026-11-12",close:"2026-11-22",day:"2026-11-21",len:90,cover:"modules 11–16"},
+  {name:"Final quiz",open:"2026-12-03",close:"2026-12-13",day:"2026-12-12",len:180,cover:"everything"}
+];
+var PROJECT={open:"2026-11-14",due:"2026-12-02"};
+
+/* ---------- dates ---------- */
+function pad(n){return String(n).padStart(2,"0")}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parse(s){return new Date(s+"T12:00:00")}
+function addDays(s,n){var d=parse(s);d.setDate(d.getDate()+n);return iso(d)}
+function today(){return iso(new Date())}
+function daysIn(y,m){return new Date(y,m+1,0).getDate()}
+function ymOf(s){return s.slice(0,7)}
+function fmtDay(s){var d=parse(s);return DOW[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate()}
+function fmtShort(s){var d=parse(s);return MONTHS[d.getMonth()].slice(0,3)+" "+d.getDate()}
+function fmtTime(min){min=((min%1440)+1440)%1440;var h=Math.floor(min/60),m=min%60,ap=h<12?"am":"pm";h=h%12||12;return h+":"+pad(m)+" "+ap}
+function toMin(t){var p=String(t||"").split(":");return (+p[0]||0)*60+(+p[1]||0)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+/* ---------- state ---------- */
+var settings={start:today(),wake:"06:30",free:"17:30",gview:"grown",ahead:0};
+var months={};           // {"2026-09": {"15": {c:[ids], p:0.8, t:ms}}}
+var view="bouquet", dayDs=today();
+
+function loadLocal(){
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(raw){var o=JSON.parse(raw);if(o.settings)settings=Object.assign(settings,o.settings);if(o.months)months=o.months;}
+  }catch(e){}
+}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify({settings:settings,months:months}))}catch(e){}}
+function setSync(t){document.getElementById("sync").textContent=t}
+
+function yearStart(){var d=parse(settings.start);return {y:d.getFullYear(),m:d.getMonth()}}
+
+/* ---------- course calendar ---------- */
+function hwDue(n){return addDays("2026-09-02",7*(n-1))}
+function hwFor(ds){for(var n=1;n<=14;n++){if(hwDue(n)>=ds)return n}return null}
+function quizFor(ds){for(var i=0;i<QUIZ.length;i++){if(ds>=QUIZ[i].open&&ds<=QUIZ[i].close)return QUIZ[i]}return null}
+function inProject(ds){return ds>=PROJECT.open&&ds<=PROJECT.due}
+
+function study(name,sub,extra){return Object.assign({cat:"study",dur:25,name:name,sub:sub},extra||{})}
+
+function studyBlocks(ds){
+  var dow=parse(ds).getDay();
+  var counts=[3,3,3,2,2,2,4];
+  var k=counts[dow];
+  var list=[];
+  if(ds<"2026-08-24"||ds>"2026-12-13"){
+    for(var i=0;i<k;i++)list.push(study("Learning sprint "+(i+1),"Review old notes or get ahead on your next course"));
+    return list;
+  }
+  if(ds>"2026-12-02"){
+    if(ds===QUIZ[2].day){
+      return [study("Warm-up: skim your cheat sheets","Just read — no new material"),
+              study("Take the final quiz","3 hours, proctored. Room scan first; 2 sheets of notes allowed",{dur:180,pts:4})];
+    }
+    var f=[study("Final prep: rewrite one module from memory","Then check it against your notes"),
+           study("Final prep: practice questions","Mix modules — don't do them in order"),
+           study("Final prep: build your 2 note sheets","Handwritten, both sides — 4 sides total"),
+           study("Final prep: explain three models out loud","When would you use each? What would it not tell you?")];
+    return f.slice(0,k);
+  }
+  var n=hwFor(ds),T=TOPICS[n],P=TOPICS[n-1];
+  switch(dow){
+    case 1: list=[study("HW "+n+": work the next question",T),study("HW "+n+": keep going","One question per sprint"),study("HW "+n+": check your results","Do the numbers make sense for the question?")];break;
+    case 2: list=[study("HW "+n+": write up your answers","Plain words — say what the model does and doesn't tell you"),study("HW "+n+": finish the write-up","Cite any code snippets or AI help"),study("Say it out loud: "+T,"5 minutes, no notes — then check what you missed")];break;
+    case 3: list=[study("HW "+n+": final read-through","Every question answered? Files attached?"),study("Submit HW "+n,"Due 11 pm Pacific tonight — aim for 9 pm")];break;
+    case 4: list=[study("HW "+n+": read every question","List the data and models you'll need"),study("Lectures: "+T,"Part 1 — take notes by hand")];break;
+    case 5: list=[study("Lectures: "+T,"Part 2"),study("One-page summary from memory","Write first, then check against the lectures")];break;
+    case 6: list=[study("HW "+n+": load the data, first model",T),study("HW "+n+": next question",""),study("Lectures: finish "+T,"Next week's videos are out today too"),study(P?"Quiz yourself: "+P:"Quiz yourself: "+T,"Retrieval, not rereading")];break;
+    case 0: list= n>1
+      ? [study("Peer review HW "+(n-1),"Due 11 pm Pacific tonight — no reviews, no credit"),study("Peer review: finish the rest","Median of your graders' scores counts"),study("HW "+n+": next question",T)]
+      : [study("HW "+n+": next question",T),study("HW "+n+": keep going",""),study("HW "+n+": check your results","")];
+      break;
+  }
+  var q=quizFor(ds);
+  if(q){
+    if(ds===q.day){
+      list=[list[0],list[1],study("Take "+q.name,q.len+" minutes, proctored. Room scan first; 1 note sheet allowed",{dur:q.len,pts:4})];
+    }else{
+      if(dow===2)list[2]=study(q.name+" prep: practice questions","Covers "+q.cover+" — closes "+fmtShort(q.close));
+      if(dow===6)list[3]=study(q.name+" prep: note sheet from memory","One sheet, both sides, handwritten");
+      if(dow===0)list[2]=study(q.name+" prep: redo one old homework","Without looking at your answer first");
+    }
+  }
+  if(inProject(ds)&&dow===6&&!(q&&ds===q.day)&&!(q&&dow===6))list[3]=study("Course project: next step","Due "+fmtShort(PROJECT.due)+", 11 pm Pacific");
+  if(inProject(ds)&&dow===5)list[1]=study("Course project: next step","Due "+fmtShort(PROJECT.due)+", 11 pm Pacific");
+  return list.slice(0,k);
+}
+
+function contextFor(ds){
+  if(ds<"2026-08-24"||ds>"2026-12-13")return {line:"Between courses",due:null};
+  var q=quizFor(ds);
+  if(ds>"2026-12-02")return {line:"ISYE 6501 · Final quiz window",due:q?q.name+" closes "+fmtShort(q.close)+", 11 pm":null};
+  var n=hwFor(ds),dow=parse(ds).getDay(),due=null;
+  if(ds===hwDue(n))due="HW "+n+" due tonight, 11 pm";
+  else if(dow===0&&n>1)due="Peer reviews for HW "+(n-1)+" due tonight, 11 pm";
+  else if(q)due=q.name+" open until "+fmtShort(q.close)+", 11 pm";
+  else due="HW "+n+" due "+fmtShort(hwDue(n));
+  return {line:"ISYE 6501 · HW "+n+" · "+TOPICS[n],due:due};
+}
+
+/* ---------- day template ---------- */
+function items(ds){
+  var dow=parse(ds).getDay(),wake=toMin(settings.wake),free=toMin(settings.free),out=[];
+  var S=studyBlocks(ds),si=0,bi=0;
+  function push(t,it){it.t=t;it.pts=it.pts||PTS[it.cat]||0;out.push(it);return t+it.dur}
+  function brk(t,dur,name,sub){bi++;return push(t,{id:"b"+bi,cat:"brk",dur:dur,name:name,sub:sub})}
+  function st(t){var s=S[si];si++;s.id="s"+si;return push(t,s)}
+  function run(t,seq){seq.forEach(function(f){t=f(t)});return t}
+
+  if(dow>=1&&dow<=5){
+    var t=wake,part="Morning";
+    t=push(t,{id:"bed",cat:"clean",dur:10,name:"Make the bed, open the blinds",sub:"Two minutes that make the room feel handled",part:part});
+    t=push(t+5,{id:"food",cat:"cook",dur:40,name:"Cook and eat your main meal",sub:"Steak or fish plus a side — see your training planner",part:part});
+    t=push(t+5,{id:"ms",cat:"study",dur:25,name:"Morning sprint",sub:"Flashcards or one short lecture video",part:part});
+    t=brk(t,5,"Break: stand up, refill water","Then head into your day");
+    out[out.length-1].part=part;
+    out.push({id:"info",info:true,t:Math.max(t+10,wake+100),name:"Work and daytime commitments",part:"Daytime"});
+    push(Math.max(720,wake+120),{id:"lunch",cat:"brk",dur:30,name:"Lunch away from your screen",sub:"A walk around the block counts double for your head",part:"Daytime"});
+
+    part="Evening"; t=free;
+    var lift=(dow===1||dow===3||dow===5);
+    if(lift){
+      t=push(t,{id:"mv",cat:"move",dur:45,name:"Lift: Workout A or B",sub:"Mon / Wed / Fri — details in your training planner",part:part});
+      t=brk(t,15,"Cool down: shower and stretch","Counts as your break");
+    }else{
+      t=push(t,{id:"mv",cat:"move",dur:30,name:"Walk 25–30 minutes",sub:"Easy pace — recovery day",part:part});
+      t=brk(t,10,"Change, drink water","");
+    }
+    t=push(t+5,{id:"snack",cat:"cook",dur:15,name:"Protein snack",sub:lift?"Within 2 hours of lifting":"Cottage cheese or Greek yogurt",part:part});
+    var nS=S.length;
+    t=st(t+5);
+    for(var i=1;i<nS;i++){t=brk(t,5,"Break: 5 minutes, away from the desk","Stand, stretch, look at something far away");t=st(t)}
+    t=brk(t,15,"Long break: 15 minutes, no phone","Walk, tidy, or just sit");
+    var chores={1:["Bathroom wipe-down","Sink, mirror, counter","clean"],2:["Start a load of laundry","Fold it during tomorrow's long break","clean"],
+      3:["Vacuum one room","Pick the one that bugs you most","clean"],4:["Check the fridge, write the grocery list","For Saturday's shop and Sunday's prep","cook"],
+      5:["Tidy for the weekend","Clear surfaces, take out trash","clean"]};
+    var c=chores[dow];
+    t=push(t,{id:"chore",cat:c[2],dur:10,name:c[0],sub:c[1],part:part});
+    t=push(t,{id:"kitchen",cat:"clean",dur:15,name:"Kitchen reset",sub:"Dishes done, counters wiped",part:part});
+    t=push(t,{id:"plan",cat:"plan",dur:5,name:"Plan tomorrow",sub:"Look at the list; pick the one sprint that matters most",part:part});
+    push(Math.max(t+20,free+240),{id:"wind",cat:"brk",dur:30,name:"Screens off, wind down",sub:"Sleep is when the studying sticks",part:part});
+  }else{
+    var W=wake+60,t2=W,p="Morning";
+    t2=push(t2,{id:"bed",cat:"clean",dur:10,name:"Make the bed, open the blinds",sub:"Sleeping in an hour is built in",part:p});
+    t2=push(t2+5,{id:"food",cat:"cook",dur:40,name:"Cook and eat your main meal",sub:"Steak or fish plus a side",part:p});
+    if(dow===6){
+      t2=push(t2+10,{id:"mv",cat:"move",dur:40,name:"Walk 30–40 minutes",sub:"Easy pace, outside if you can",part:p});
+      t2=brk(t2,10,"Change, drink water","");
+      out[out.length-1].part=p;
+      var quizDay=S.length===3&&S[2].pts===4;
+      t2=st(t2+5);
+      for(var j=1;j<S.length;j++){
+        var lastBig=(j===S.length-1);
+        t2=lastBig?brk(t2,20,"Long break: 20 minutes, no phone","Get outside for a bit"):brk(t2,5,"Break: 5 minutes, away from the desk","");
+        out[out.length-1].part=p;
+        t2=st(t2);
+      }
+      p="Afternoon";
+      t2=push(t2+10,{id:"lunch",cat:"cook",dur:40,name:"Lunch",sub:"Something simple — leftovers are perfect",part:p});
+      t2=push(t2+20,{id:"shop",cat:"cook",dur:60,name:"Grocery shop",sub:"Use Thursday's list; buy for Sunday's prep",part:p});
+      t2=push(t2+10,{id:"laundry",cat:"clean",dur:20,name:"Laundry: wash and fold",sub:"",part:p});
+      t2=push(t2+10,{id:"fun",cat:"brk",dur:120,name:"Free time — actually rest",sub:quizDay?"You just took a quiz. Do something you enjoy.":"No homework, no guilt",part:p});
+      push(Math.max(t2+60,toMin("20:30")),{id:"plan",cat:"plan",dur:5,name:"Plan tomorrow",sub:"Which peer reviews are left?",part:"Evening"});
+    }else{
+      t2=st(t2+10);out[out.length-1].part=p;
+      t2=brk(t2,5,"Break: 5 minutes, away from the desk","");out[out.length-1].part=p;
+      t2=st(t2);out[out.length-1].part=p;
+      t2=brk(t2,15,"Long break: 15 minutes","Put music on for the next part");out[out.length-1].part=p;
+      t2=push(t2,{id:"prep",cat:"cook",pts:2,dur:90,name:"Meal prep: proteins and sides",sub:"Cook enough for Monday–Wednesday; portion into containers",part:p});
+      p="Afternoon";
+      t2=push(t2,{id:"lunch",cat:"brk",dur:45,name:"Sit down and eat what you just made",sub:"A real break — away from the kitchen",part:p});
+      t2=push(t2,{id:"reset",cat:"clean",pts:2,dur:45,name:"Weekly reset",sub:"Bathroom, floors, sheets, trash out",part:p});
+      t2=push(t2,{id:"fun",cat:"brk",dur:150,name:"Rest day — do something fun",sub:"No workout today. Recovery is part of the plan",part:p});
+      p="Evening";
+      t2=st(t2+15);out[out.length-1].part=p;
+      t2=brk(t2,5,"Break: 5 minutes","");out[out.length-1].part=p;
+      push(t2+10,{id:"plan",cat:"plan",dur:15,name:"Plan the week",sub:"Check deadlines; move anything that won't fit",part:p});
+    }
+  }
+  out.forEach(function(it){if(!it.part)it.part=it.t<720?"Morning":(it.t<toMin(settings.free)?"Daytime":"Evening")});
+  out.sort(function(a,b){return a.t-b.t});
+  return out;
+}
+
+function maxPts(ds){return items(ds).reduce(function(a,it){return a+(it.info?0:it.pts)},0)}
+function tierOf(p){for(var i=0;i<TIERS.length;i++){if(p>=TIERS[i].min&&(TIERS[i].min>0||p===0))return TIERS[i]}return TIERS[5]}
+
+function rec(ds){var m=months[ymOf(ds)];return m?m[String(+ds.slice(8))]:null}
+function checks(ds){var r=rec(ds);return r?r.c:[]}
+function setChecks(ds,arr){
+  var ym=ymOf(ds),d=String(+ds.slice(8));
+  if(!months[ym])months[ym]={};
+  var its=items(ds),max=0,got=0;
+  its.forEach(function(it){if(it.info)return;max+=it.pts;if(arr.indexOf(it.id)>-1)got+=it.pts});
+  months[ym][d]={c:arr,p:max?Math.round(got/max*1000)/1000:0,t:Date.now()};
+  queue(ym);
+}
+
+/* ---------- storage (this browser) ---------- */
+function queue(ym){saveLocal()}
+function saveSettings(){saveLocal()}
+function storageOK(){try{localStorage.setItem("__t","1");localStorage.removeItem("__t");return true}catch(e){return false}}
+
+/* ---------- colors ---------- */
+function hx(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+function mix(a,b,t){var A=hx(a),B=hx(b);return "#"+A.map(function(v,i){return pad(Math.round(v+(B[i]-v)*t).toString(16))}).join("")}
+function tierFill(k,hue,ds){
+  switch(k){
+    case "full":return hue;
+    case "bloom":return mix(hue,"#FFFFFF",.3);
+    case "fading":return mix(hue,"#C9A77F",.6);
+    case "wilting":return pick(BROWN_LIGHT,ds||"2026-01-01");
+    case "wilted":return "url(#"+pick(BROWN_DARK,ds||"2026-01-01")+")";
+    default:return "url(#mottle)";
+  }
+}
+var SHRINK={full:1,bloom:1,fading:.97,wilting:.93,wilted:.88,gray:.88};
+var DROOP={full:0,bloom:0,fading:1,wilting:3,wilted:6,gray:6};
+
+function dayState(ds){
+  var t=today();
+  if(ds<settings.start)return {kind:"pre"};
+  if(ds>t)return {kind:"future"};
+  var r=rec(ds),p=r?r.p:0,tier=tierOf(p);
+  if(ds===t)return {kind:"today",p:p,tier:tier};
+  return {kind:"past",p:p,tier:tier};
+}
+
+/* ---------- flower drawing ---------- */
+function petalPath(r0,r1,w){
+  var L=r1-r0;
+  return "M0 "+(-r0)+
+    " C"+(w*.95)+" "+(-r0-L*.12)+" "+(w*1.1)+" "+(-r1+L*.4)+" "+(w*.62)+" "+(-r1+L*.08)+
+    " Q0 "+(-r1-L*.06)+" "+(-w*.62)+" "+(-r1+L*.08)+
+    " C"+(-w*1.1)+" "+(-r1+L*.4)+" "+(-w*.95)+" "+(-r0-L*.12)+" 0 "+(-r0)+"Z";
+}
+function f1(n){return Math.round(n*10)/10}
+
+/* ---------- seeded randomness ---------- */
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+function hsl(h,s,l){
+  s/=100;l/=100;var k=function(n){return (n+h/30)%12},a=s*Math.min(l,1-l);
+  var f=function(n){return l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1))};
+  return "#"+[f(0),f(8),f(4)].map(function(v){return pad(Math.round(v*255).toString(16))}).join("");
+}
+
+/* ---------- flower designs ---------- */
+var FAMILIES=["round","point","notch","heart","fringe","square","tulip","cleft","wavy","flame","spike","scallop","spoon"];
+var CENTERS=["spokes","dots","rings","spiral"];
+var YEAR1=[ // hand-picked designs for the first year
+  {P:5, fam:"round", w:.94,r0:.17,e:.42},{P:8, fam:"notch", w:.9, r0:.19,e:.42},{P:6, fam:"point", w:.86,r0:.17,e:.72,q:1.05},
+  {P:10,fam:"fringe",w:.9, r0:.21,e:.42},{P:4, fam:"point", w:.8, r0:.15,e:.72,q:1.05},{P:6, fam:"round", w:.95,r0:.2, e:.42},
+  {P:5, fam:"heart", w:.96,r0:.17,e:.5}, {P:12,fam:"round", w:.78,r0:.23,e:.42},{P:8, fam:"notch", w:.9, r0:.19,e:.42},
+  {P:5, fam:"round", w:.94,r0:.17,e:.42},{P:6, fam:"point", w:.86,r0:.17,e:.72,q:1.05},{P:10,fam:"fringe",w:.9, r0:.21,e:.42}
+];
+
+function monthIndex(ym){var s=yearStart(),p=ym.split("-");return (+p[0]-s.y)*12+(+p[1]-1-s.m)}
+function yearIdxOf(ym){return Math.floor(monthIndex(ym)/12)}
+
+function designFor(ym){
+  var r=rng(hashStr("design"+ym)),mi=monthIndex(ym),d;
+  if(mi>=0&&mi<12){d=Object.assign({},YEAR1[mi]);d.center=CENTERS[mi%4]}
+  else{
+    var fam=FAMILIES[Math.floor(r()*FAMILIES.length)];
+    var Ps=[4,5,5,6,6,7,8,8,9,10,11,12,13,14];
+    d={P:Ps[Math.floor(r()*Ps.length)],fam:fam,w:.74+r()*.23,r0:.15+r()*.09,e:.3+r()*.4,q:1+r()*.35,
+       d:.1+r()*.16,s:.12+r()*.12,f:2+Math.floor(r()*3),amp:.05+r()*.06,center:CENTERS[Math.floor(r()*4)]};
+    if(d.fam==="spike"||d.fam==="flame")d.w=Math.min(d.w,.85);
+  }
+  d.rot=Math.floor(r()*360);
+  return d;
+}
+/* Real flower colors: [name, color family, four shades] */
+var FLORA=[
+  ["Sunflower","yellow",["#F5B700","#FFC928","#E39A00","#FFD95A"]],
+  ["Daffodil","yellow",["#F7D21E","#FFE36A","#EDB200","#FBE58E"]],
+  ["Black-eyed Susan","yellow",["#F2B705","#F7C933","#E09B00","#FAD766"]],
+  ["Marigold","orange",["#F28C00","#FFA62B","#DD6F00","#FFBA52"]],
+  ["California poppy","orange",["#FF8C1A","#FFA640","#EE6A0C","#FFB870"]],
+  ["Bird of paradise","orange",["#FF7A12","#FF9636","#E3600A","#FFAE5E"]],
+  ["Red poppy","red",["#D7261E","#E8452C","#B51B16","#F0614A"]],
+  ["Red tulip","red",["#C8102E","#E0303F","#A30C25","#EB5463"]],
+  ["Scarlet anemone","red",["#D1223F","#E3405A","#AE1832","#EE6479"]],
+  ["Peony","pink",["#EE7FA8","#F59DBD","#E0608F","#F9B6CF"]],
+  ["Cherry blossom","pink",["#F08DAE","#F6A8C2","#E3719A","#F8BBD0"]],
+  ["Lotus","pink",["#E96F9E","#F08BB2","#D95288","#F5A6C4"]],
+  ["Hibiscus","magenta",["#E0115F","#EF3A7A","#BE0D50","#F5629A"]],
+  ["Bougainvillea","magenta",["#C71585","#D83BA2","#A5126F","#E361B7"]],
+  ["Fuchsia","magenta",["#D0208F","#E046A6","#AD1A77","#EA70BD"]],
+  ["Orchid","purple",["#B04CC8","#C672DA","#9235AE","#D893E6"]],
+  ["Lavender","purple",["#8E6CC4","#A68AD6","#7654AE","#BAA3E1"]],
+  ["Allium","purple",["#9A5CC6","#B07DD6","#8045AE","#C49BE2"]],
+  ["Iris","violet",["#5B3FA8","#7458C4","#472F8C","#8E78D2"]],
+  ["Violet","violet",["#6A2C91","#8445AE","#55217A","#9C64C4"]],
+  ["Salvia","violet",["#6247C2","#7B64D2","#4E37A6","#9582DE"]],
+  ["Cornflower","blue",["#4169E1","#5B82F0","#2F52C0","#7A9AF5"]],
+  ["Delphinium","blue",["#2E55C9","#4A6FDB","#2342A8","#6E8EE6"]],
+  ["Hydrangea","blue",["#5B8FD9","#7FA8E6","#4574C4","#9DBBEC"]],
+  ["Forget-me-not","sky",["#4DA3E0","#6FB8EA","#3389C9","#94CDF0"]],
+  ["Blue poppy","sky",["#3AA0D8","#5DB6E3","#2787C0","#80C8EC"]],
+  ["Morning glory","sky",["#3E8FE0","#62A7EA","#2C74C6","#88BFF0"]],
+  ["Coral zinnia","coral",["#F4664A","#F78467","#E04B31","#FA9E86"]],
+  ["Coral peony","coral",["#F2705E","#F68D7E","#DE5645","#F9A89C"]],
+  ["Gerbera","coral",["#FF5E4D","#FF7D6E","#E8463A","#FF9C91"]],
+  ["Bells of Ireland","green",["#6FB33F","#8CC65E","#579A2C","#A6D47F"]],
+  ["Green zinnia","green",["#8DBF3A","#A5CF5C","#73A52A","#BCDC80"]],
+  ["Clematis","violet",["#7A4FC0","#9270D0","#633DA4","#A98DDC"]],
+  ["Camellia","pink",["#E4577E","#EC7A99","#CC3E66","#F29AB2"]]
+];
+// First tracking year follows the seasons
+var YEAR1_FLORA=["Sunflower","Marigold","Iris","Red poppy","Cornflower","Peony","Daffodil","Lavender","Coral zinnia","Forget-me-not","Hibiscus","Bells of Ireland"];
+function floraByName(n){for(var i=0;i<FLORA.length;i++)if(FLORA[i][0]===n)return FLORA[i];return FLORA[0]}
+var GROUP={red:"warm",coral:"warm",orange:"warm",yellow:"sun",green:"sun",pink:"rose",magenta:"rose",purple:"cool",violet:"cool",blue:"cool",sky:"cool"};
+var floraMemo={};
+function floraAt(mi){
+  if(mi<0)mi=-mi;
+  if(mi<12)return floraByName(YEAR1_FLORA[mi]);
+  var key=settings.start+":"+mi;
+  if(floraMemo[key])return floraMemo[key];
+  var i=12;
+  while(i<mi&&floraMemo[settings.start+":"+i])i++;
+  for(;i<=mi;i++){
+    var k=settings.start+":"+i;
+    if(floraMemo[k])continue;
+    var recent=[floraAt(i-1)[1],floraAt(i-2)[1],floraAt(i-3)[1]],used=floraAt(i-12)[0];
+    var lastG=GROUP[floraAt(i-1)[1]],pool=FLORA.filter(function(f){return recent.indexOf(f[1])<0&&f[0]!==used&&GROUP[f[1]]!==lastG});
+    var r=rng(hashStr("flora"+k));
+    floraMemo[k]=pool[Math.floor(r()*pool.length)];
+  }
+  return floraMemo[key];
+}
+function floraFor(ym){return floraAt(monthIndex(ym))}
+function paletteFor(ym){return floraFor(ym)[2]}
+function flowerName(ym){return floraFor(ym)[0]}
+function hueFor(ds){var pal=paletteFor(ds.slice(0,7)),d=parse(ds);return pal[(d.getDate()*7+d.getMonth())%pal.length]}
+
+function shapeFn(D,u){
+  var au=Math.abs(u),e=D.e||.42,base=Math.max(0,1-u*u),round=Math.pow(base,e);
+  switch(D.fam){
+    case "point": return Math.pow(Math.max(0,1-Math.pow(au,D.q||1.05)),e<.5?.72:e);
+    case "notch": return round*(1-(D.d||.16)*Math.exp(-Math.pow(u/(D.s||.16),2)));
+    case "heart": return Math.pow(base,.5)*(1-.24*Math.exp(-Math.pow(u/.28,2)));
+    case "fringe":return round*(1-(D.amp||.08)*Math.abs(Math.sin(u*Math.PI*(D.f||3))));
+    case "square":return Math.pow(Math.max(0,1-Math.pow(au,7)),.5);
+    case "tulip": return Math.pow(Math.max(0,1-Math.pow(au,5)),.5)*(1-.13*Math.pow(Math.cos(u*Math.PI*1.5),2));
+    case "cleft": return Math.pow(base,.45)*(1-.42*Math.exp(-Math.pow(u/.11,2)));
+    case "wavy":  return round*(1+.07*Math.sin(u*Math.PI*(D.f||3)*1.7))/1.07;
+    case "flame": return Math.pow(Math.max(0,1-au),.55)*(1+.18*Math.sin((u+1)*Math.PI*.5))/1.18;
+    case "spike": return Math.pow(Math.max(0,1-Math.pow(au,.85)),1.15);
+    case "scallop":return round*(1-.1*Math.abs(Math.sin(u*Math.PI*2)));
+    case "spoon": return Math.pow(Math.max(0,1-Math.pow(au,4)),.6)*(.82+.18*Math.pow(au,1.5));
+    default: return round;
+  }
+}
+
+function flower(y,m,R,D){
+  var n=daysIn(y,m),P=D.P,ymS=y+"-"+pad(m+1),t=today(),rot=D.rot||0;
+  var r0=R*D.r0,L=R-r0,a=D.w*180/P,ks=Math.max(1,R/80),sw=1.05*ks,hue=paletteFor(ymS)[0];
+  function pt(phi,u,r){var th=(phi+u*a)*Math.PI/180;return f1(r*Math.sin(th))+" "+f1(-r*Math.cos(th))}
+  function edge(u){return r0+L*shapeFn(D,u)}
+  var base=Math.floor(n/P),extra=n%P,day=0,s="",outlines="",selG="";
+  for(var p=0;p<P;p++){
+    var phi=rot+p*360/P,k=base+(p<extra?1:0);
+    for(var j=0;j<k;j++){
+      day++;
+      var us=-1+2*j/k,ue=-1+2*(j+1)/k,ds=ymS+"-"+pad(day),st=dayState(ds);
+      var steps=Math.max(3,Math.ceil(28/k)),d="M"+pt(phi,us,r0);
+      for(var q=0;q<=steps;q++){var u=us+(ue-us)*q/steps;d+=" L"+pt(phi,u,edge(u))}
+      d+=" L"+pt(phi,ue,r0)+"Z";
+      var cls="",fill="",op="";
+      if(st.kind==="pre")cls="pre";
+      else if(st.kind==="future"||(st.kind==="today"&&st.p===0))cls="pf";
+      else{fill=tierFill(st.tier.k,hueFor(ds),ds);if(st.kind==="today")op=' fill-opacity=".6"'}
+      var isSel=(ds===dayDs),isToday=(ds===t);
+      var body='<path d="'+d+'" class="ink'+(cls?" "+cls:"")+'"'+(fill?' style="fill:'+fill+'"'+op:"")+
+        ' stroke-width="'+(isSel?2.6*ks:isToday?1.9*ks:sw*.55)+'" stroke-linejoin="round"/>';
+      if(st.kind==="future"||st.kind==="today"){
+        var um=(us+ue)/2,len=edge(um)-r0,rm=r0+len*.7,wid=rm*(ue-us)*a*Math.PI/180,fs=Math.min(9*ks*.95,wid*1.2,len*.34);
+        if(fs>=4.2){
+          var deg=(((phi+um*a)%360)+360)%360,th=deg*Math.PI/180,rt=deg>180?deg+90:deg-90;
+          var tx=f1(rm*Math.sin(th)),ty=f1(-rm*Math.cos(th));
+          body+='<text class="num" x="'+tx+'" y="'+ty+'" font-size="'+f1(fs)+'" transform="rotate('+f1(rt)+' '+tx+' '+ty+')">'+day+'</text>';
+        }
+      }
+      var al=fmtDay(ds)+": "+(st.kind==="future"?"ahead":st.kind==="pre"?"before you began":st.tier.name+", "+Math.round(st.p*100)+"%");
+      var g='<g class="petal" data-ds="'+ds+'" role="button" aria-label="'+esc(al)+'">'+body+'</g>';
+      if(isSel)selG=g;else s+=g;
+    }
+    var od="M"+pt(phi,-1,r0);
+    for(var q2=0;q2<=48;q2++){var u2=-1+2*q2/48;od+=" L"+pt(phi,u2,edge(u2))}
+    outlines+='<path d="'+od+'" class="ink" stroke-width="'+(sw*1.15)+'" stroke-linejoin="round" pointer-events="none"/>';
+  }
+  s+=outlines+selG;
+  var monthDone=(ymS+"-"+pad(n))<t,cr=r0*1.2,c="";
+  c+='<circle r="'+f1(cr)+'" class="ink pf" stroke-width="'+sw+'"'+(monthDone?' style="fill:'+mix(hue,"#F6E7A8",.78)+'"':'')+'/>';
+  var i,an;
+  switch(D.center){
+    case "dots":
+      for(i=0;i<9;i++){an=i*Math.PI*2/9;c+='<circle cx="'+f1(Math.cos(an)*cr*.62)+'" cy="'+f1(Math.sin(an)*cr*.62)+'" r="'+f1(cr*.11)+'" class="inkfill"/>'}
+      c+='<circle r="'+f1(cr*.3)+'" class="ink" stroke-width="'+sw+'"/><circle r="'+f1(cr*.08)+'" class="inkfill"/>';break;
+    case "rings":
+      c+='<circle r="'+f1(cr*.68)+'" class="ink" stroke-width="'+f1(.8*ks)+'"/><circle r="'+f1(cr*.38)+'" class="ink" stroke-width="'+f1(.8*ks)+'"/>';
+      for(i=0;i<5;i++){an=i*Math.PI*2/5;c+='<circle cx="'+f1(Math.cos(an)*cr*.18)+'" cy="'+f1(Math.sin(an)*cr*.18)+'" r="'+f1(cr*.06)+'" class="inkfill"/>'}
+      break;
+    case "spiral":
+      var sp="M0 0";for(i=1;i<=90;i++){an=i*.2;var rr=cr*.8*i/90;sp+=" L"+f1(Math.cos(an)*rr)+" "+f1(Math.sin(an)*rr)}
+      c+='<path d="'+sp+'" class="ink" stroke-width="'+f1(.8*ks)+'"/>';break;
+    default:
+      c+='<circle r="'+f1(cr*.28)+'" class="ink" stroke-width="'+sw+'"/>';
+      var spokes=P>=8?10:8;
+      for(i=0;i<spokes;i++){
+        an=i*Math.PI*2/spokes;var co=Math.cos(an),sn=Math.sin(an);
+        c+='<line x1="'+f1(co*cr*.36)+'" y1="'+f1(sn*cr*.36)+'" x2="'+f1(co*cr*.72)+'" y2="'+f1(sn*cr*.72)+'" class="ink" stroke-width="'+f1(.8*ks)+'"/>';
+        c+='<circle cx="'+f1(co*cr*.76)+'" cy="'+f1(sn*cr*.76)+'" r="'+f1(Math.max(.9,cr*.07))+'" class="inkfill"/>';
+      }
+  }
+  return s+'<g pointer-events="none">'+c+'</g>';
+}
+
+function sprig(x,y,sz,rot,kind){
+  var s='<g transform="translate('+f1(x)+' '+f1(y)+') rotate('+rot+')" pointer-events="none">';
+  if(kind===0){
+    s+='<path d="M0 '+f1(sz)+' Q'+f1(-sz*.2)+' 0 0 '+f1(-sz)+'" class="ink" stroke-width="1"/>';
+    [[-.5,-.2],[.45,-.45],[-.35,-.75],[.3,.15],[0,-1.05]].forEach(function(b){
+      s+='<line x1="'+f1(b[0]*sz*.3)+'" y1="'+f1(b[1]*sz)+'" x2="'+f1(b[0]*sz)+'" y2="'+f1(b[1]*sz-sz*.12)+'" class="ink" stroke-width=".9"/>';
+      s+='<circle cx="'+f1(b[0]*sz)+'" cy="'+f1(b[1]*sz-sz*.12)+'" r="'+f1(sz*.13)+'" class="ink pf" stroke-width=".9"/>';
+    });
+  }else if(kind===1){
+    s+='<path d="M0 '+f1(sz)+' L0 '+f1(-sz)+'" class="ink" stroke-width="1"/>';
+    for(var i=0;i<3;i++){
+      var yy=sz*.5-i*sz*.6,l=sz*(.55-i*.1);
+      s+='<path d="M0 '+f1(yy)+' Q'+f1(l*.5)+' '+f1(yy-l*.55)+' '+f1(l)+' '+f1(yy-l*.5)+' Q'+f1(l*.5)+' '+f1(yy-l*.05)+' 0 '+f1(yy)+'Z" class="ink leaf" stroke-width=".9"/>';
+      s+='<path d="M0 '+f1(yy)+' Q'+f1(-l*.5)+' '+f1(yy-l*.55)+' '+f1(-l)+' '+f1(yy-l*.5)+' Q'+f1(-l*.5)+' '+f1(yy-l*.05)+' 0 '+f1(yy)+'Z" class="ink leaf" stroke-width=".9"/>';
+    }
+  }else{
+    for(var k=0;k<5;k++){
+      var an=k*72*Math.PI/180;
+      s+='<circle cx="'+f1(Math.sin(an)*sz*.32)+'" cy="'+f1(-Math.cos(an)*sz*.32)+'" r="'+f1(sz*.24)+'" class="ink pf" stroke-width=".9"/>';
+    }
+    s+='<circle r="'+f1(sz*.14)+'" class="inkfill"/>';
+  }
+  return s+'</g>';
+}
+
+/* ---------- garden layout: tight, seeded, grows month by month ---------- */
+var GW=400,GAP=-7,layoutCache={};
+function layoutYear(yi){
+  if(layoutCache[yi])return layoutCache[yi];
+  var r=rng(hashStr("layout"+yi+settings.start)),placed=[];
+  for(var f=0;f<12;f++){
+    var R=48+Math.floor(r()*17),cands=[],i,j;
+    for(i=0;i<40;i++)cands.push([R+2+r()*(GW-2*R-4),R+2]);
+    for(i=0;i<placed.length;i++){
+      for(j=0;j<36;j++){
+        var an=j*Math.PI*2/36+r()*.1,dd=placed[i][2]+R+GAP;
+        cands.push([placed[i][0]+Math.cos(an)*dd,placed[i][1]+Math.sin(an)*dd]);
+      }
+      cands.push([R+2,placed[i][1]],[GW-R-2,placed[i][1]]);
+    }
+    var best=null,bs=1e9;
+    for(i=0;i<cands.length;i++){
+      var x=cands[i][0],y=cands[i][1];
+      if(x<R+2||x>GW-R-2||y<R+2)continue;
+      var ok=true;
+      for(j=0;j<placed.length;j++){var p=placed[j];if(Math.hypot(x-p[0],y-p[1])<p[2]+R+GAP-.01){ok=false;break}}
+      if(!ok)continue;
+      var sc=y+r()*14;
+      if(sc<bs){bs=sc;best=[x,y,R]}
+    }
+    placed.push(best);
+  }
+  layoutCache[yi]=placed;
+  return placed;
+}
+function fillers(placed,H,seed){
+  var r=rng(seed),out=[];
+  for(var y=10;y<H-6;y+=6)for(var x=10;x<GW-10;x+=6){
+    var fr=Math.min(x,GW-x,y+4,H-y);
+    for(var i=0;i<placed.length;i++)fr=Math.min(fr,Math.hypot(x-placed[i][0],y-placed[i][1])-placed[i][2]);
+    if(fr>=12)out.push([x,y,fr]);
+  }
+  out.sort(function(a,b){return b[2]-a[2]});
+  var keep=[];
+  out.forEach(function(c){
+    if(keep.length>=14)return;
+    for(var k=0;k<keep.length;k++)if(Math.hypot(c[0]-keep[k][0],c[1]-keep[k][1])<keep[k][2]+c[2]+4)return;
+    keep.push(c);
+  });
+  return keep.map(function(c){return sprig(c[0],c[1],Math.min(c[2]-3,22),Math.floor(r()*60)-30,Math.floor(r()*3))}).join("");
+}
+
+function yearMonthsFor(yi){
+  var s=yearStart(),out=[];
+  for(var i=0;i<12;i++){var k=s.m+yi*12+i,m=k%12,y=s.y+Math.floor(k/12);out.push({y:y,m:m,ym:y+"-"+pad(m+1)})}
+  return out;
+}
+function currentYearIdx(){return Math.max(0,yearIdxOf(today().slice(0,7)))}
+function yearMonths(){return yearMonthsFor(currentYearIdx())}
+
+function gardenSVG(yi,count,withLabel){
+  var ms=yearMonthsFor(yi).slice(0,count),pos=layoutYear(yi).slice(0,count),t=today();
+  var H=Math.ceil(Math.max.apply(null,pos.map(function(p){return p[1]+p[2]})))+6;
+  var s='<svg class="bq" viewBox="0 0 '+GW+' '+H+'" role="group" aria-label="Year '+(yi+1)+' garden">';
+  s+=fillers(pos,H,hashStr("fill"+yi+"-"+count));
+  ms.forEach(function(o,i){
+    var p=pos[i],R=p[2],last=o.ym+"-"+pad(daysIn(o.y,o.m)),done=last<t;
+    s+='<g class="fl" transform="translate('+f1(p[0])+' '+f1(p[1])+')">'+flower(o.y,o.m,R,designFor(o.ym))+'</g>';
+  });
+  return s+'</svg>';
+}
+
+function monthSVG(ym){
+  var y=+ym.slice(0,4),m=+ym.slice(5)-1,R=160;
+  return '<svg class="bq one" viewBox="-172 -172 344 344" role="group" aria-label="'+MONTHS[m]+' '+y+'">'+flower(y,m,R,designFor(ym))+'</svg>';
+}
+function addMonths(ym,n){var y=+ym.slice(0,4),m=+ym.slice(5)-1+n;y+=Math.floor(m/12);m=((m%12)+12)%12;return y+"-"+pad(m+1)}
+function firstYM(){return settings.start.slice(0,7)}
+
+function renderBouquet(){
+  var el=document.getElementById("v-bouquet"),t=today(),yi=currentYearIdx();
+  var mi=Math.max(0,monthIndex(t.slice(0,7))),count=mi-yi*12+1;
+  var cur=yearMonthsFor(yi)[count-1],mode=settings.gview||"grown",ahead=Math.max(0,Math.min(12,settings.ahead||0));
+  var seg='<div class="seg" role="group" aria-label="Garden view">'+
+    [["month","Month"],["grown","So far"],["year","Full year"]].map(function(o){
+      return '<button data-gv="'+o[0]+'" aria-pressed="'+(mode===o[0])+'">'+o[1]+'</button>'}).join("")+'</div>';
+  var s=seg,top="",extra="";
+
+  if(mode==="month"){
+    var ym=ymOf(dayDs);
+    if(ym<firstYM())ym=firstYM();
+    var yy=+ym.slice(0,4),mm=+ym.slice(5)-1,st=ym===t.slice(0,7)?"This month":(ym<t.slice(0,7)?"Finished":"Ahead");
+    top='<div class="mhead"><button class="circ" id="gpm" aria-label="Previous month"'+(ym<=firstYM()?" disabled":"")+'>‹</button>'+
+      '<div class="mt"><h2>'+MONTHS[mm]+' '+yy+'</h2><p class="hand muted">'+st+' · '+daysIn(yy,mm)+' days</p></div>'+
+      '<button class="circ" id="gnm" aria-label="Next month">›</button></div>';
+    s+=top+monthSVG(ym);
+  }else{
+    var shown=mode==="year"?12:Math.min(12,count+ahead);
+    var over=mode==="year"?0:Math.max(0,count+ahead-12);
+    var line=mode==="year"
+      ? 'Year '+(yi+1)+' · '+(count-1)+' finished, '+(12-count)+' ahead'
+      : MONTHS[cur.m]+' · '+flowerName(cur.ym)+' is growing · '+(count-1)+' finished'+(ahead?' · '+ahead+' ahead':'');
+    s+='<div class="ghead"><p class="hand">'+line+'</p><a class="tolist" href="#dayPanel">Today\u2019s list \u2193</a></div>';
+    if(mode==="grown"){
+      s+='<div class="ahead"><span class="hand">Months ahead</span>'+
+        '<button class="circ sm" id="ahm" aria-label="Show fewer months ahead"'+(ahead<=0?" disabled":"")+'>−</button>'+
+        '<b aria-live="polite">'+ahead+'</b>'+
+        '<button class="circ sm" id="ahp" aria-label="Show more months ahead"'+(ahead>=12?" disabled":"")+'>+</button></div>';
+    }
+    s+=gardenSVG(yi,shown,true);
+    if(over>0){
+      var nx=yearMonthsFor(yi+1);
+      s+='<h3 class="hand" style="font-weight:400">Coming up in year '+(yi+2)+'</h3>'+gardenSVG(yi+1,over,true);
+    }
+  }
+
+  var logged=0,full=0;
+  Object.keys(months).forEach(function(ym){Object.keys(months[ym]).forEach(function(d){var r=months[ym][d];if(r.p>0)logged++;if(r.p>=.9)full++})});
+  var legend='<div class="legend">'+TIERS.map(function(tr){
+    var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"#58391F":tr.k==="wilting"?"#B98552":tierFill(tr.k,paletteFor(today().slice(0,7))[0]);
+    return '<span><i class="sw" style="background:'+f+'"></i>'+tr.name+'</span>';
+  }).join("")+'<span><i class="sw" style="background:var(--paper)"></i>Ahead</span></div>';
+
+  var past="";
+  for(var y=yi-1;y>=0;y--){
+    var ms=yearMonthsFor(y);
+    past+='<h3>Year '+(y+1)+' · '+MONTHS[ms[0].m].slice(0,3)+' '+ms[0].y+' – '+MONTHS[ms[11].m].slice(0,3)+' '+ms[11].y+'</h3>'+gardenSVG(y,12,false);
+  }
+
+  el.innerHTML=s+
+    '<p class="sum">'+(logged?logged+(logged===1?" day":" days")+" logged · "+full+" in full bloom":"Check off today's list below to color your first day")+'</p>'+legend+
+    '<p class="muted small" style="text-align:center;margin-top:12px">A new flower appears each month, and finished months stay in the garden. Each petal is split into sections, one per day — tap one to open that day.</p>'+
+    '<div id="dayPanel" class="daypanel"></div>'+
+    (past?'<div class="past"><h2>Earlier years</h2>'+past+'</div>':'');
+  renderDay();
+  el.querySelectorAll(".seg button").forEach(function(b){
+    b.onclick=function(){settings.gview=b.getAttribute("data-gv");saveSettings();var y=window.scrollY;renderBouquet();window.scrollTo(0,y)};
+  });
+  function setAhead(n){settings.ahead=n;saveSettings();var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var f=document.getElementById(n>=12?"ahm":"ahp");if(f)f.focus({preventScroll:true})}
+  var ap=document.getElementById("ahp"),am=document.getElementById("ahm");
+  if(ap)ap.onclick=function(){setAhead(Math.min(12,(settings.ahead||0)+1))};
+  if(am)am.onclick=function(){setAhead(Math.max(0,(settings.ahead||0)-1))};
+  function goMonth(n){
+    var ym=addMonths(ymOf(dayDs)<firstYM()?firstYM():ymOf(dayDs),n);
+    if(ym<firstYM())return;
+    dayDs=ym===today().slice(0,7)?today():ym+"-01";
+    var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
+    var f=document.getElementById(n<0?"gpm":"gnm");if(f&&!f.disabled)f.focus({preventScroll:true});else{f=document.getElementById("gnm");if(f)f.focus({preventScroll:true})}
+  }
+  var pm=document.getElementById("gpm"),nm=document.getElementById("gnm");
+  if(pm)pm.onclick=function(){goMonth(-1)};
+  if(nm)nm.onclick=function(){goMonth(1)};
+  el.querySelectorAll(".petal").forEach(function(g){
+    g.addEventListener("click",function(){
+      dayDs=g.getAttribute("data-ds");
+      renderBouquet();
+      var dp=document.getElementById("dayPanel");
+      if(dp)dp.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+    });
+  });
+  if(mode==="month"){}
+  var tl=el.querySelector(".tolist");
+  if(tl)tl.onclick=function(e){e.preventDefault();var dp=document.getElementById("dayPanel");if(dp)dp.scrollIntoView({behavior:"smooth",block:"start"})};
+}
+
+function scorePetal(fill,op){
+  return '<svg viewBox="-30 -84 60 88" aria-hidden="true"><path class="ink fillp'+(fill?"":" pf")+'" stroke-width="1.8" d="'+petalPath(2,80,24)+'"'+
+    (fill?' style="fill:'+fill+'" fill-opacity="'+op+'"':'')+'/><path d="M0 -14 L0 -44" class="ink" stroke-width="1.2" stroke-linecap="round"/></svg>';
+}
+
+function renderDay(){
+  var el=document.getElementById("dayPanel"),ds=dayDs,t=today();
+  if(!el)return;
+  var its=items(ds),c=checks(ds),future=ds>t;
+  var max=0,got=0;
+  its.forEach(function(it){if(it.info)return;max+=it.pts;if(c.indexOf(it.id)>-1)got+=it.pts});
+  var p=max?got/max:0,tier=tierOf(p),hue=hueFor(ds);
+  var nextT=null;for(var i=TIERS.length-1;i>=0;i--){if(TIERS[i].min>p+1e-9){nextT=TIERS[i];break}}
+  var need=nextT?Math.ceil(nextT.min*max-1e-9)-got:0;
+  var ctx=contextFor(ds);
+  var fill=got?tierFill(tier.k,hue,ds):(ds<t&&ds>=settings.start?"url(#mottle)":null);
+
+  var h='<div class="dayhead"><div><h2>'+fmtDay(ds)+'</h2><p class="ctx">'+esc(ctx.line)+'</p>'+
+    (ctx.due?'<span class="due">'+esc(ctx.due)+'</span>':'')+'</div>'+
+    '<div class="dnav"><button class="circ" id="dp" aria-label="Previous day">‹</button><button class="circ" id="dn" aria-label="Next day">›</button></div></div>'+
+    (ds!==t?'<button class="jump" id="dt">Back to today</button>':'');
+
+  if(ds<settings.start){
+    h+='<p class="muted" style="margin-top:18px">This is before you started tracking, so this section stays pale green. You can move your start date on The plan tab.</p>';
+  }
+  h+='<div class="score">'+scorePetal(fill,1)+'<div style="flex:1;min-width:0">'+
+    '<p class="tier">'+(future?"Still ahead":got?tier.name:(ds<t?"Gray — nothing checked":"Not started"))+'</p>'+
+    '<p class="pts">'+got+' of '+max+' points</p>'+
+    '<div class="meter"><i style="width:'+(p*100).toFixed(1)+'%"></i></div>'+
+    (future?'<p class="next">You can check items off once the day arrives.</p>':
+      nextT&&need>0?'<p class="next">'+need+' more point'+(need===1?"":"s")+' to '+nextT.name.toLowerCase()+'</p>':'<p class="next">Full bloom. Nice work.</p>')+
+    '</div></div>';
+
+  var part="";
+  h+='<div>';
+  its.forEach(function(it){
+    if(it.part!==part){if(part)h+='</ul>';part=it.part;h+='<p class="group">'+part+'</p><ul class="items">'}
+    if(it.info){h+='<li class="info"><span class="t">'+fmtTime(it.t)+'</span><div class="it">'+esc(it.name)+'</div></li>';return}
+    var on=c.indexOf(it.id)>-1;
+    var pp='<span class="pp" aria-hidden="true">'+new Array(it.pts+1).join("<i></i>")+'</span>';
+    h+='<li class="'+(on?"on ":"")+(it.cat==="brk"?"brk":"")+'"><span class="t">'+fmtTime(it.t)+'</span>'+
+      '<button class="box" data-id="'+it.id+'" aria-pressed="'+on+'"'+(future?" disabled":"")+' aria-label="'+esc(it.name)+', '+it.pts+' point'+(it.pts>1?"s":"")+'"></button>'+
+      '<div class="it"><span class="nm">'+esc(it.name)+pp+'</span>'+(it.sub?'<span class="sb">'+esc(it.sub)+' · '+it.dur+' min</span>':'<span class="sb">'+it.dur+' min</span>')+'</div></li>';
+  });
+  h+='</ul></div>';
+  el.innerHTML=h;
+
+  function redraw(focusSel){var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var n=document.querySelector(focusSel);if(n)n.focus({preventScroll:true})}
+  document.getElementById("dp").onclick=function(){dayDs=addDays(dayDs,-1);redraw("#dp")};
+  document.getElementById("dn").onclick=function(){dayDs=addDays(dayDs,1);redraw("#dn")};
+  var dt=document.getElementById("dt");if(dt)dt.onclick=function(){dayDs=today();redraw("#dp")};
+  el.querySelectorAll(".box").forEach(function(b){
+    b.onclick=function(){
+      var id=b.getAttribute("data-id"),arr=checks(dayDs).slice(),k=arr.indexOf(id);
+      if(k>-1)arr.splice(k,1);else arr.push(id);
+      setChecks(dayDs,arr);
+      redraw('.box[data-id="'+id+'"]');
+    };
+  });
+}
+
+function renderPlan(){
+  var el=document.getElementById("v-plan");
+  var sample="2026-09-21",mx=maxPts(sample);
+  var rows=[
+    ["Mon","Lift","3 + morning","Bathroom wipe-down"],
+    ["Tue","Walk","3 + morning","Laundry"],
+    ["Wed","Lift","2 + morning · submit HW","Vacuum one room"],
+    ["Thu","Walk","2 + morning · new HW opens","Grocery list"],
+    ["Fri","Lift","2 + morning","Tidy for the weekend"],
+    ["Sat","Walk","4 · quiz days swap in","Groceries, laundry"],
+    ["Sun","Rest","3 · peer reviews first","Meal prep, weekly reset"]
+  ];
+  var h='<h2>How your week runs</h2>'+
+    '<p class="muted">Built around ISYE 6501: homework is due Wednesdays at 11 pm Pacific, peer reviews on Sundays, and new lectures drop Saturdays. Workouts match your training planner.</p>'+
+    '<div class="tw"><table><thead><tr><th>Day</th><th>Move</th><th>Study sprints</th><th>Chores</th></tr></thead><tbody>'+
+    rows.map(function(r){return '<tr><td>'+r.join("</td><td>")+'</td></tr>'}).join("")+'</tbody></table></div>'+
+    '<p class="small muted" style="margin-top:10px">Every sprint is 25 minutes, followed by a 5-minute break. After the last sprint comes a 15-minute break. Weekday evenings finish around 8:40 pm.</p>';
+
+  h+='<h3>How a day gets its color</h3>'+
+    '<p>Each item is worth points by how much it matters. A day\u2019s color comes from the share of points you earn, so skipping one small thing never wilts a day.</p>'+
+    '<div class="tw"><table><thead><tr><th>Item</th><th>Points</th><th>Why</th></tr></thead><tbody>'+
+    '<tr><td>Workout</td><td>3</td><td>One session, and the hardest to reschedule</td></tr>'+
+    '<tr><td>Study sprint</td><td>2 each</td><td>Deadlines and grades ride on these</td></tr>'+
+    '<tr><td>Quiz · meal prep · weekly reset</td><td>4 · 2 · 2</td><td>Bigger blocks earn more</td></tr>'+
+    '<tr><td>Cooking, cleaning, planning</td><td>1 each</td><td>Short, but they keep the week running</td></tr>'+
+    '<tr><td>Breaks</td><td>1 each</td><td>Rest is part of the plan, so it scores</td></tr>'+
+    '</tbody></table></div>'+
+    '<ul class="tiers">'+TIERS.map(function(tr){
+      var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"linear-gradient(90deg,#6E4B2E 0 33%,#58391F 33% 66%,#4E3524 66%)":tr.k==="wilting"?"linear-gradient(90deg,#C69A6B 0 33%,#B98552 33% 66%,#A8703F 66%)":tierFill(tr.k,paletteFor(today().slice(0,7))[0]);
+      var range=tr.k==="gray"?"0%":tr.k==="wilted"?"1–34%":Math.round(tr.min*100)+"%"+(tr.k==="full"?"+":"–"+(Math.round(TIERS[TIERS.indexOf(tr)-1].min*100)-1)+"%");
+      var ptsNeeded=tr.k==="gray"?"0 points":tr.k==="wilted"?"1+ points":Math.ceil(tr.min*mx-1e-9)+"+ points";
+      return '<li><i class="sw" style="background:'+f+'"></i><div><b>'+tr.name+'</b> · '+range+'<br><span class="small muted">'+tr.note+'. On a '+mx+'-point Monday: '+ptsNeeded+'.</span></div></li>';
+    }).join("")+'</ul>';
+
+  var ev=[];
+  for(var n=1;n<=14;n++){ev.push([hwDue(n),"HW "+n+" due"]);ev.push([addDays(hwDue(n),4),"Peer reviews for HW "+n+" due"])}
+  QUIZ.forEach(function(q){ev.push([q.open,q.name+" opens"]);ev.push([q.close,q.name+" closes"])});
+  ev.push([PROJECT.due,"Course project due"]);ev.push([addDays(PROJECT.due,4),"Project peer reviews due"]);
+  var t=today();
+  ev=ev.filter(function(e){return e[0]>=t}).sort(function(a,b){return a[0]<b[0]?-1:1}).slice(0,6);
+  h+='<h3>Coming up</h3>'+(ev.length?'<ul class="dl">'+ev.map(function(e){return '<li><span>'+e[1]+'</span><span class="d">'+fmtShort(e[0])+', 11 pm PT</span></li>'}).join("")+'</ul>':'<p class="muted">No course deadlines left.</p>');
+
+  h+='<div class="card"><h3>Fit it to your day</h3>'+
+    '<p class="small muted">Times shift everything else. Changing these never changes past days.</p>'+
+    '<div class="form">'+
+    '<label for="sw">Wake up (weekdays)</label><input type="time" id="sw" value="'+settings.wake+'">'+
+    '<label for="sf">Free from (weekdays)</label><input type="time" id="sf" value="'+settings.free+'">'+
+    '<label for="ss">Started tracking</label><input type="date" id="ss" value="'+settings.start+'">'+
+    '</div><button class="btn" id="sv">Save times</button> <span class="hand muted" id="svm"></span></div>'+
+    '<div class="card"><h3>Back up your bouquet</h3>'+
+    '<p class="small muted">Progress lives in this browser only. Download a backup now and then, and use it to move to another phone or computer.</p>'+
+    '<button class="btn" id="ex">Download backup</button> <button class="btn" id="im" style="background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)">Restore from file</button>'+
+    '<input type="file" id="imf" accept="application/json,.json" hidden><p class="hand muted" id="bm" style="margin-top:8px"></p></div>';
+  el.innerHTML=h;
+  document.getElementById("sv").onclick=function(){
+    var w=document.getElementById("sw").value,f=document.getElementById("sf").value,s=document.getElementById("ss").value;
+    if(w)settings.wake=w;if(f)settings.free=f;if(s){settings.start=s;layoutCache={};floraMemo={}}
+    saveSettings();renderHeader();
+    document.getElementById("svm").textContent="Saved";
+  };
+  var bm=document.getElementById("bm");
+  document.getElementById("ex").onclick=function(){
+    var blob=new Blob([JSON.stringify({app:"year-in-bloom",v:1,settings:settings,months:months},null,1)],{type:"application/json"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="year-in-bloom-backup-"+today()+".json";
+    document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+    bm.textContent="Backup downloaded";
+  };
+  document.getElementById("im").onclick=function(){document.getElementById("imf").click()};
+  document.getElementById("imf").onchange=function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var o=JSON.parse(r.result);
+        if(!o||o.app!=="year-in-bloom"||!o.months)throw 0;
+        if(!confirm("Replace the progress in this browser with this backup?"))return;
+        settings=Object.assign(settings,o.settings||{});months=o.months;layoutCache={};floraMemo={};saveLocal();render();
+        document.getElementById("bm").textContent="Backup restored";
+      }catch(err){bm.textContent="That file isn't a Year in bloom backup. Choose the .json file you downloaded."}
+    };
+    r.readAsText(f);
+  };
+}
+
+function renderHeader(){
+  var yi=currentYearIdx(),ms=yearMonthsFor(yi),a=ms[0],b=ms[11];
+  document.getElementById("span").textContent="Year "+(yi+1)+" · "+MONTHS[a.m]+" "+a.y+" to "+MONTHS[b.m]+" "+b.y;
+}
+
+function render(){
+  renderHeader();
+  if(view==="bouquet")renderBouquet();
+  else if(view==="plan")renderPlan();
+}
+function setView(v){
+  view=v;
+  document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-selected",String(b.getAttribute("data-v")===v))});
+  document.querySelectorAll(".view").forEach(function(s){s.classList.toggle("on",s.id==="v-"+v)});
+  render();window.scrollTo(0,0);
+}
+document.querySelectorAll("nav button").forEach(function(b){
+  b.addEventListener("click",function(){
+    var v=b.getAttribute("data-v");
+    if(v==="bouquet")dayDs=today();
+    setView(v);
+  });
+});
+
+loadLocal();
+if(!settings.start)settings.start=today();
+saveLocal();
+render();
+if(!storageOK())setSync("This browser is blocking storage — progress won't be kept after you close the page");
+})();
+</script>
+</body>
+</html>
