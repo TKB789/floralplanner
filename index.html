@@ -244,6 +244,34 @@ fieldset legend{font-size:.88rem;color:var(--ink2);margin-bottom:6px}
 .bar i{display:block;height:100%;background:var(--ink)}
 .heat{display:grid;grid-template-columns:28px repeat(12,1fr);gap:4px;margin-top:10px;font-size:.72rem;color:var(--ink2)}
 .heat i{aspect-ratio:1;border-radius:5px;border:1px solid var(--line);display:block}
+/* priorities */
+.pri{margin:18px 0 4px;padding:14px 16px;border:2px solid var(--ink);border-radius:18px 14px 20px 16px;
+  background:var(--wash);box-shadow:4px 4px 0 var(--ink)}
+.prihead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pri h3{margin:0;font-size:1.2rem}
+.prilist{list-style:none;margin:10px 0 0;padding:0}
+.prilist li{display:flex;align-items:center;gap:10px;padding:7px 0}
+.prilist li+li{border-top:1px solid var(--line)}
+.prilist .nm{flex:1;font-weight:650;line-height:1.35}
+.prilist li.on .nm{text-decoration:line-through;color:var(--ink2)}
+.pmove{font-size:.95rem;white-space:nowrap}
+.pdel{background:none;border:0;cursor:pointer;color:var(--ink2);font-size:1rem;padding:4px 6px}
+.priadd{display:flex;gap:8px;margin-top:10px}
+.priadd input{flex:1;min-width:0;font-family:var(--disp);font-size:1rem;padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink)}
+.priadd .btn{padding:6px 16px}
+/* mood grid */
+.moodgrid{margin-top:30px;padding-top:18px;border-top:1.5px dashed var(--line)}
+.moodgrid h3{margin:0 0 2px}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.mgh{text-align:center;font-family:var(--hand);color:var(--ink2);font-size:.95rem}
+.mgc{aspect-ratio:1;border:1.5px solid var(--ink);border-radius:10px 8px 11px 9px;background:var(--paper);cursor:pointer;
+  font-family:var(--disp);font-size:.85rem;padding:0;color:var(--ink)}
+.mgc.fut{border-style:dashed;border-color:var(--line);color:var(--ink2)}
+.mgc.tdy{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink)}
+.mgc.sel{font-weight:800;border-width:2.5px}
+.mglegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-family:var(--hand);font-size:1rem;color:var(--ink2)}
+.mglegend span{display:inline-flex;align-items:center;gap:6px}
+.mglegend i{width:12px;height:12px;border-radius:4px;border:1.2px solid var(--ink);display:inline-block}
 footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink2);font-size:1rem}
 
 @media (prefers-reduced-motion:no-preference){
@@ -580,17 +608,18 @@ function baseItems(ds){
   return out;
 }
 
-PTS.other=1;
-var CAT_NAMES={study:"Study",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",plan:"Planning",other:"Other"};
+PTS.other=1;PTS.pri=2;
+var CAT_NAMES={pri:"Priorities",study:"Study",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",plan:"Planning",other:"Other"};
 function partFor(t){return t<720?"Morning":(t<toMin(settings.free)?"Daytime":"Evening")}
 function items(ds){
   var dow=parse(ds).getDay(),x=dayx[ds]||{},list=baseItems(ds);
   var hideW=routine.hide[dow]||[],hideD=x.hide||[],editW=routine.edit[dow]||{},editD=x.edit||{};
   list=list.concat((routine.add[dow]||[]).map(function(it){return Object.assign({custom:"week"},it)}));
   list=list.concat((x.add||[]).map(function(it){return Object.assign({custom:"day"},it)}));
+  (x.pri||[]).forEach(function(pr){list.push({id:pr.id,name:pr.name,cat:"pri",pts:PTS.pri,dur:0,t:-1,part:"Priorities",pri:true})});
   var out=[];
   list.forEach(function(it){
-    if(it.info){out.push(it);return}
+    if(it.info||it.pri){out.push(it);return}
     if(hideW.indexOf(it.id)>-1||hideD.indexOf(it.id)>-1)return;
     var e=Object.assign({},editW[it.id]||{},editD[it.id]||{});
     var o=Object.assign({},it,e);
@@ -622,13 +651,22 @@ function tierOf(p){for(var i=0;i<TIERS.length;i++){if(p>=TIERS[i].min&&(TIERS[i]
 
 function rec(ds){var m=months[ymOf(ds)];return m?m[String(+ds.slice(8))]:null}
 function checks(ds){var r=rec(ds);return r?r.c:[]}
+function scoreFor(ds,arr){
+  var its=items(ds),max=0,got=0,priLeft=0;
+  its.forEach(function(it){
+    if(it.info)return;max+=it.pts;
+    var on=arr.indexOf(it.id)>-1;if(on)got+=it.pts;
+    if(it.pri&&!on)priLeft++;
+  });
+  var p=max?got/max:0;
+  if(priLeft&&p>=.9)p=.89;          // full bloom needs every priority done
+  return {max:max,got:got,p:p,priLeft:priLeft};
+}
 function setChecks(ds,arr){
   var ym=ymOf(ds),d=String(+ds.slice(8));
   if(!months[ym])months[ym]={};
-  var its=items(ds),max=0,got=0;
-  its.forEach(function(it){if(it.info)return;max+=it.pts;if(arr.indexOf(it.id)>-1)got+=it.pts});
-  var old=months[ym][d]||{};
-  months[ym][d]=Object.assign({},old,{c:arr,p:max?Math.round(got/max*1000)/1000:0,t:Date.now()});
+  var sc=scoreFor(ds,arr),old=months[ym][d]||{};
+  months[ym][d]=Object.assign({},old,{c:arr,p:Math.round(sc.p*1000)/1000,t:Date.now()});
   queue(ym);
 }
 
@@ -709,40 +747,40 @@ function designFor(ym){
 }
 /* Real flower colors: [name, color family, four shades] */
 var FLORA=[
-  ["Sunflower","yellow",["#F5B700","#FFC928","#E39A00","#FFD95A"]],
-  ["Daffodil","yellow",["#F7D21E","#FFE36A","#EDB200","#FBE58E"]],
-  ["Black-eyed Susan","yellow",["#F2B705","#F7C933","#E09B00","#FAD766"]],
-  ["Marigold","orange",["#F28C00","#FFA62B","#DD6F00","#FFBA52"]],
-  ["California poppy","orange",["#FF8C1A","#FFA640","#EE6A0C","#FFB870"]],
-  ["Bird of paradise","orange",["#FF7A12","#FF9636","#E3600A","#FFAE5E"]],
-  ["Red poppy","red",["#D7261E","#E8452C","#B51B16","#F0614A"]],
-  ["Red tulip","red",["#C8102E","#E0303F","#A30C25","#EB5463"]],
-  ["Scarlet anemone","red",["#D1223F","#E3405A","#AE1832","#EE6479"]],
-  ["Peony","pink",["#EE7FA8","#F59DBD","#E0608F","#F9B6CF"]],
-  ["Cherry blossom","pink",["#F08DAE","#F6A8C2","#E3719A","#F8BBD0"]],
-  ["Lotus","pink",["#E96F9E","#F08BB2","#D95288","#F5A6C4"]],
-  ["Hibiscus","magenta",["#E0115F","#EF3A7A","#BE0D50","#F5629A"]],
-  ["Bougainvillea","magenta",["#C71585","#D83BA2","#A5126F","#E361B7"]],
-  ["Fuchsia","magenta",["#D0208F","#E046A6","#AD1A77","#EA70BD"]],
-  ["Orchid","purple",["#B04CC8","#C672DA","#9235AE","#D893E6"]],
-  ["Lavender","purple",["#8E6CC4","#A68AD6","#7654AE","#BAA3E1"]],
-  ["Allium","purple",["#9A5CC6","#B07DD6","#8045AE","#C49BE2"]],
-  ["Iris","violet",["#5B3FA8","#7458C4","#472F8C","#8E78D2"]],
-  ["Violet","violet",["#6A2C91","#8445AE","#55217A","#9C64C4"]],
-  ["Salvia","violet",["#6247C2","#7B64D2","#4E37A6","#9582DE"]],
-  ["Cornflower","blue",["#4169E1","#5B82F0","#2F52C0","#7A9AF5"]],
-  ["Delphinium","blue",["#2E55C9","#4A6FDB","#2342A8","#6E8EE6"]],
-  ["Hydrangea","blue",["#5B8FD9","#7FA8E6","#4574C4","#9DBBEC"]],
-  ["Forget-me-not","sky",["#4DA3E0","#6FB8EA","#3389C9","#94CDF0"]],
-  ["Blue poppy","sky",["#3AA0D8","#5DB6E3","#2787C0","#80C8EC"]],
-  ["Morning glory","sky",["#3E8FE0","#62A7EA","#2C74C6","#88BFF0"]],
-  ["Coral zinnia","coral",["#F4664A","#F78467","#E04B31","#FA9E86"]],
-  ["Coral peony","coral",["#F2705E","#F68D7E","#DE5645","#F9A89C"]],
-  ["Gerbera","coral",["#FF5E4D","#FF7D6E","#E8463A","#FF9C91"]],
-  ["Bells of Ireland","green",["#6FB33F","#8CC65E","#579A2C","#A6D47F"]],
-  ["Green zinnia","green",["#8DBF3A","#A5CF5C","#73A52A","#BCDC80"]],
-  ["Clematis","violet",["#7A4FC0","#9270D0","#633DA4","#A98DDC"]],
-  ["Camellia","pink",["#E4577E","#EC7A99","#CC3E66","#F29AB2"]]
+  ["Sunflower","yellow",["#F5B700","#FFC928","#E39A00","#FFD95A"],"Golden yellow"],
+  ["Daffodil","yellow",["#F7D21E","#FFE36A","#EDB200","#FBE58E"],"Lemon yellow"],
+  ["Black-eyed Susan","yellow",["#F2B705","#F7C933","#E09B00","#FAD766"],"Amber"],
+  ["Marigold","orange",["#F28C00","#FFA62B","#DD6F00","#FFBA52"],"Bright orange"],
+  ["California poppy","orange",["#FF8C1A","#FFA640","#EE6A0C","#FFB870"],"Tangerine"],
+  ["Bird of paradise","orange",["#FF7A12","#FF9636","#E3600A","#FFAE5E"],"Blaze orange"],
+  ["Red poppy","red",["#D7261E","#E8452C","#B51B16","#F0614A"],"Scarlet"],
+  ["Red tulip","red",["#C8102E","#E0303F","#A30C25","#EB5463"],"Crimson"],
+  ["Scarlet anemone","red",["#D1223F","#E3405A","#AE1832","#EE6479"],"Cherry red"],
+  ["Peony","pink",["#EE7FA8","#F59DBD","#E0608F","#F9B6CF"],"Soft pink"],
+  ["Cherry blossom","pink",["#F08DAE","#F6A8C2","#E3719A","#F8BBD0"],"Blush pink"],
+  ["Lotus","pink",["#E96F9E","#F08BB2","#D95288","#F5A6C4"],"Rose pink"],
+  ["Hibiscus","magenta",["#E0115F","#EF3A7A","#BE0D50","#F5629A"],"Hot pink"],
+  ["Bougainvillea","magenta",["#C71585","#D83BA2","#A5126F","#E361B7"],"Magenta"],
+  ["Fuchsia","magenta",["#D0208F","#E046A6","#AD1A77","#EA70BD"],"Fuchsia"],
+  ["Orchid","purple",["#B04CC8","#C672DA","#9235AE","#D893E6"],"Bright purple"],
+  ["Lavender","purple",["#8E6CC4","#A68AD6","#7654AE","#BAA3E1"],"Lavender"],
+  ["Allium","purple",["#9A5CC6","#B07DD6","#8045AE","#C49BE2"],"Amethyst"],
+  ["Iris","violet",["#5B3FA8","#7458C4","#472F8C","#8E78D2"],"Deep violet"],
+  ["Violet","violet",["#6A2C91","#8445AE","#55217A","#9C64C4"],"Royal purple"],
+  ["Salvia","violet",["#6247C2","#7B64D2","#4E37A6","#9582DE"],"Blue violet"],
+  ["Cornflower","blue",["#4169E1","#5B82F0","#2F52C0","#7A9AF5"],"Royal blue"],
+  ["Delphinium","blue",["#2E55C9","#4A6FDB","#2342A8","#6E8EE6"],"Cobalt blue"],
+  ["Hydrangea","blue",["#5B8FD9","#7FA8E6","#4574C4","#9DBBEC"],"Periwinkle"],
+  ["Forget-me-not","sky",["#4DA3E0","#6FB8EA","#3389C9","#94CDF0"],"Sky blue"],
+  ["Blue poppy","sky",["#3AA0D8","#5DB6E3","#2787C0","#80C8EC"],"Cerulean"],
+  ["Morning glory","sky",["#3E8FE0","#62A7EA","#2C74C6","#88BFF0"],"Azure"],
+  ["Coral zinnia","coral",["#F4664A","#F78467","#E04B31","#FA9E86"],"Coral"],
+  ["Coral peony","coral",["#F2705E","#F68D7E","#DE5645","#F9A89C"],"Salmon"],
+  ["Gerbera","coral",["#FF5E4D","#FF7D6E","#E8463A","#FF9C91"],"Tomato red"],
+  ["Bells of Ireland","green",["#6FB33F","#8CC65E","#579A2C","#A6D47F"],"Leaf green"],
+  ["Green zinnia","green",["#8DBF3A","#A5CF5C","#73A52A","#BCDC80"],"Lime green"],
+  ["Clematis","violet",["#7A4FC0","#9270D0","#633DA4","#A98DDC"],"Purple"],
+  ["Camellia","pink",["#E4577E","#EC7A99","#CC3E66","#F29AB2"],"Raspberry"]
 ];
 // First tracking year follows the seasons
 var YEAR1_FLORA=["Sunflower","Marigold","Iris","Red poppy","Cornflower","Peony","Daffodil","Lavender","Coral zinnia","Forget-me-not","Hibiscus","Bells of Ireland"];
@@ -768,7 +806,8 @@ function floraAt(mi){
 }
 function floraFor(ym){return floraAt(monthIndex(ym))}
 function paletteFor(ym){return floraFor(ym)[2]}
-function flowerName(ym){return floraFor(ym)[0]}
+function flowerName(ym){return floraFor(ym)[3]}
+function colorName(ym){return floraFor(ym)[3]}
 function hueFor(ds){var pal=paletteFor(ds.slice(0,7)),d=parse(ds);return pal[(d.getDate()*7+d.getMonth())%pal.length]}
 
 function shapeFn(D,u){
@@ -959,7 +998,7 @@ function legendHTML(ym,caption){
     var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"#58391F":tr.k==="wilting"?"#B98552":tierFill(tr.k,hue);
     return '<span><i class="sw" style="background:'+f+'"></i>'+tr.name+'</span>';
   }).join("")+'<span><i class="sw" style="background:var(--paper)"></i>Ahead</span></div>';
-  if(caption)s+='<p class="legcap">Shown in '+MONTHS[+ym.slice(5)-1]+'\u2019s '+flowerName(ym)+' colors — each month uses its own flower</p>';
+  if(caption)s+='<p class="legcap">Shown in '+MONTHS[+ym.slice(5)-1]+'\u2019s colors ('+colorName(ym).toLowerCase()+') — each month has its own color</p>';
   return s;
 }
 function needsBackup(){
@@ -991,7 +1030,7 @@ function renderBouquet(){
     var over=mode==="year"?0:Math.max(0,count+ahead-12);
     var line=mode==="year"
       ? 'Year '+(yi+1)+' · '+(count-1)+' finished, '+(12-count)+' ahead'
-      : MONTHS[cur.m]+' · '+flowerName(cur.ym)+' is growing · '+(count-1)+' finished'+(ahead?' · '+ahead+' ahead':'');
+      : MONTHS[cur.m]+' · '+colorName(cur.ym)+' · growing · '+(count-1)+' finished'+(ahead?' · '+ahead+' ahead':'');
     s+='<div class="ghead"><p class="hand">'+line+'</p><a class="tolist" href="#dayPanel">Today\u2019s list \u2193</a></div>';
     if(mode==="grown"){
       s+='<div class="ahead"><span class="hand">Months ahead</span>'+
@@ -1063,6 +1102,24 @@ function scorePetal(fill,op){
 
 var MOODS=[["normal","Normal","#8FB4E8"],["happy","Happy","#F2C94C"],["special","Special","#C9B6E4"],
   ["tired","Sick / tired","#9CCB6B"],["sad","Sad","#C4A57A"],["angry","Angry","#EE8FB0"]];
+function moodGrid(ds){
+  var ym=ymOf(ds),y=+ym.slice(0,4),m=+ym.slice(5)-1,n=daysIn(y,m),first=new Date(y,m,1).getDay(),t=today(),counts={};
+  var cells='';
+  ["S","M","T","W","T","F","S"].forEach(function(d){cells+='<span class="mgh" aria-hidden="true">'+d+'</span>'});
+  for(var i=0;i<first;i++)cells+='<span></span>';
+  for(var d=1;d<=n;d++){
+    var dd=ym+"-"+pad(d),r=rec(dd)||{},mo=MOODS.filter(function(x){return x[0]===r.mood})[0];
+    if(mo)counts[mo[0]]=(counts[mo[0]]||0)+1;
+    cells+='<button class="mgc'+(dd===t?" tdy":"")+(dd===ds?" sel":"")+(dd>t?" fut":"")+'" data-mg="'+dd+'"'+
+      (mo?' style="background:'+mo[2]+';color:#141414"':'')+
+      ' aria-label="'+fmtDay(dd)+(mo?": "+mo[1]:": no mood")+'">'+d+'</button>';
+  }
+  var total=Object.keys(counts).reduce(function(a,k){return a+counts[k]},0);
+  var leg=MOODS.map(function(x){return '<span><i style="background:'+x[2]+'"></i>'+x[1]+(counts[x[0]]?' · '+counts[x[0]]:'')+'</span>'}).join("");
+  return '<section class="moodgrid" aria-labelledby="mgH"><h3 id="mgH">'+MONTHS[m]+' moods</h3>'+
+    '<p class="small muted" style="margin:0 0 8px">'+(total?total+" of "+n+" days tracked. Tap a day to open it.":"Pick a mood above and your month fills in here.")+'</p>'+
+    '<div class="mg">'+cells+'</div><div class="mglegend">'+leg+'</div></section>';
+}
 function setMeta(ds,obj){
   var ym=ymOf(ds),d=String(+ds.slice(8));
   if(!months[ym])months[ym]={};
@@ -1139,9 +1196,7 @@ function renderDay(){
   var el=document.getElementById("dayPanel"),ds=dayDs,t=today();
   if(!el)return;
   var its=items(ds),c=checks(ds),future=ds>t;
-  var max=0,got=0;
-  its.forEach(function(it){if(it.info)return;max+=it.pts;if(c.indexOf(it.id)>-1)got+=it.pts});
-  var p=max?got/max:0,tier=tierOf(p),hue=hueFor(ds);
+  var sc=scoreFor(ds,c),max=sc.max,got=sc.got,p=sc.p,tier=tierOf(p),hue=hueFor(ds);
   var nextT=null;for(var i=TIERS.length-1;i>=0;i--){if(TIERS[i].min>p+1e-9){nextT=TIERS[i];break}}
   var need=nextT?Math.ceil(nextT.min*max-1e-9)-got:0;
   var ctx=contextFor(ds);
@@ -1160,12 +1215,28 @@ function renderDay(){
     '<p class="pts">'+got+' of '+max+' points</p>'+
     '<div class="meter"><i style="width:'+(p*100).toFixed(1)+'%"></i></div>'+
     (future?'<p class="next">You can check items off once the day arrives.</p>':
-      nextT&&need>0?'<p class="next">'+need+' more point'+(need===1?"":"s")+' to '+nextT.name.toLowerCase()+'</p>':'<p class="next">Full bloom. Nice work.</p>')+
+      (sc.priLeft&&got/max>=.9)?'<p class="next">Finish your '+(sc.priLeft===1?"last priority":sc.priLeft+" priorities")+' to reach full bloom</p>':
+      nextT&&need>0?'<p class="next">'+need+' more point'+(need===1?"":"s")+' to '+nextT.name.toLowerCase()+(sc.priLeft&&nextT.k==="full"?' — and finish your priorities':'')+'</p>':'<p class="next">Full bloom. Nice work.</p>')+
     '</div></div>';
+
+  var pris=its.filter(function(it){return it.pri});
+  h+='<section class="pri" aria-labelledby="priH"><div class="prihead"><h3 id="priH">Priorities</h3><span class="hand muted">Must be done for a full-bloom day</span></div>';
+  if(pris.length){
+    h+='<ul class="prilist">'+pris.map(function(it){
+      var on=c.indexOf(it.id)>-1,undone=!on;
+      return '<li class="'+(on?"on":"")+'"><button class="box" data-id="'+it.id+'" aria-pressed="'+on+'"'+(future?" disabled":"")+' aria-label="Priority: '+esc(it.name)+'"></button>'+
+        '<span class="nm">'+esc(it.name)+'</span>'+
+        (undone?'<button class="linkbtn pmove" data-pmove="'+it.id+'" aria-label="Move '+esc(it.name)+' to the next day">→ next day</button>':'')+
+        '<button class="pdel" data-pdel="'+it.id+'" aria-label="Delete '+esc(it.name)+'">✕</button></li>'}).join("")+'</ul>';
+  }else{
+    h+='<p class="small muted" style="margin:4px 0 0">Nothing yet. Add the one to three things that would make this day count.</p>';
+  }
+  h+='<form class="priadd" id="priForm"><label for="priIn" class="sr">New priority</label><input id="priIn" maxlength="100" placeholder="Add a priority…" autocomplete="off"><button class="btn" type="submit">Add</button></form></section>';
 
   var part="";
   h+='<div>';
   its.forEach(function(it){
+    if(it.pri)return;
     if(it.part!==part){if(part)h+='</ul>';part=it.part;h+='<p class="group">'+part+'</p><ul class="items">'}
     if(it.info){h+='<li class="info"><span class="t">'+fmtTime(it.t)+'</span><div class="it">'+esc(it.name)+'</div></li>';return}
     var on=c.indexOf(it.id)>-1;
@@ -1196,13 +1267,34 @@ function renderDay(){
   var r0=rec(ds)||{};
   h+='<p class="group">How was the day?</p><div class="moods">'+MOODS.map(function(m){
     return '<button class="chip" data-mood="'+m[0]+'" aria-pressed="'+(r0.mood===m[0])+'"><i style="background:'+m[2]+'"></i>'+m[1]+'</button>'}).join("")+'</div>'+
-    '<label for="note" class="sr">Notes</label><textarea id="note" placeholder="Notes, wins, what got in the way…" maxlength="2000">'+esc(r0.note||"")+'</textarea>';
+    '<label for="note" class="sr">Notes</label><textarea id="note" placeholder="Notes, wins, what got in the way…" maxlength="2000">'+esc(r0.note||"")+'</textarea>'+
+    moodGrid(ds);
   el.innerHTML=h;
 
   function redraw(focusSel){var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var n=document.querySelector(focusSel);if(n)n.focus({preventScroll:true})}
   document.getElementById("dp").onclick=function(){dayDs=addDays(dayDs,-1);redraw("#dp")};
   document.getElementById("dn").onclick=function(){dayDs=addDays(dayDs,1);redraw("#dn")};
   var dt=document.getElementById("dt");if(dt)dt.onclick=function(){dayDs=today();redraw("#dp")};
+  var pf=document.getElementById("priForm");
+  if(pf)pf.onsubmit=function(e){
+    e.preventDefault();var v=document.getElementById("priIn").value.trim();if(!v)return;
+    var x=dayx[dayDs]=dayx[dayDs]||{};(x.pri=x.pri||[]).push({id:"p"+uid(),name:v});
+    rescore(dayDs);saveLocal();redraw("#priIn");
+  };
+  el.querySelectorAll("[data-pdel]").forEach(function(b){b.onclick=function(){
+    var id=b.getAttribute("data-pdel"),x=dayx[dayDs];x.pri=x.pri.filter(function(p){return p.id!==id});
+    rescore(dayDs);saveLocal();redraw("#priIn");
+  }});
+  el.querySelectorAll("[data-pmove]").forEach(function(b){b.onclick=function(){
+    var id=b.getAttribute("data-pmove"),x=dayx[dayDs],pr=x.pri.filter(function(p){return p.id===id})[0];
+    x.pri=x.pri.filter(function(p){return p.id!==id});
+    var nd=addDays(dayDs,1),nx=dayx[nd]=dayx[nd]||{};(nx.pri=nx.pri||[]).push({id:pr.id,name:pr.name});
+    rescore(dayDs);rescore(nd);saveLocal();redraw("#priIn");
+  }});
+  el.querySelectorAll("[data-mg]").forEach(function(b){b.onclick=function(){
+    dayDs=b.getAttribute("data-mg");var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
+    var dp=document.getElementById("dayPanel");if(dp)dp.scrollIntoView({behavior:"smooth",block:"start"});
+  }});
   var ed=document.getElementById("editDay");if(ed)ed.onclick=function(){editing=true;redraw("#addTask")};
   var de=document.getElementById("doneEdit");if(de)de.onclick=function(){editing=false;redraw("#editDay")};
   var at=document.getElementById("addTask");if(at)at.onclick=function(){openTask(dayDs,null)};
@@ -1367,7 +1459,7 @@ function buildICS(what,n){
   for(var i=0;i<n;i++){
     var ds=addDays(today(),i);
     items(ds).forEach(function(it){
-      if(it.info)return;
+      if(it.info||it.pri)return;
       if(what==="key"&&it.cat!=="study"&&it.cat!=="move")return;
       L.push("BEGIN:VEVENT","UID:"+ds+"-"+it.id+"@year-in-bloom","DTSTAMP:"+stamp,
         "DTSTART:"+icsTime(ds,it.t),"DTEND:"+icsTime(ds,it.t+it.dur),
