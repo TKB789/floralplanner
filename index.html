@@ -112,6 +112,7 @@ p{margin:0 0 12px}
 .mhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .mt{text-align:center}.mt h2{margin:0}.mt p{margin:0;font-size:1.05rem}
 .bq.one{max-width:420px}
+.dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.2px solid var(--ink);margin-right:5px;vertical-align:-1px}
 .past{margin-top:44px;padding-top:24px;border-top:1.5px dashed var(--ink)}
 .past h3{font-family:var(--hand);font-weight:400;font-size:1.25rem}
 .daypanel{margin-top:30px;padding-top:24px;border-top:1.5px dashed var(--ink);scroll-margin-top:12px}
@@ -673,7 +674,7 @@ function flower(y,m,R,D){
       d+=" L"+pt(phi,ue,r0)+"Z";
       var cls="",fill="",op="";
       if(st.kind==="pre")cls="pre";
-      else if(st.kind==="future"||(st.kind==="today"&&st.p===0))cls="pf";
+      else if(st.kind==="future"||(st.kind==="today"&&st.p===0)){cls="pf";fill="color-mix(in srgb, "+hueFor(ds)+" 30%, var(--paper))"}
       else{fill=tierFill(st.tier.k,hueFor(ds),ds);if(st.kind==="today")op=' fill-opacity=".6"'}
       var isSel=(ds===dayDs),isToday=(ds===t);
       var body='<path d="'+d+'" class="ink'+(cls?" "+cls:"")+'"'+(fill?' style="fill:'+fill+'"'+op:"")+
@@ -834,7 +835,7 @@ function renderBouquet(){
     if(ym<firstYM())ym=firstYM();
     var yy=+ym.slice(0,4),mm=+ym.slice(5)-1,st=ym===t.slice(0,7)?"This month":(ym<t.slice(0,7)?"Finished":"Ahead");
     top='<div class="mhead"><button class="circ" id="gpm" aria-label="Previous month"'+(ym<=firstYM()?" disabled":"")+'>‹</button>'+
-      '<div class="mt"><h2>'+MONTHS[mm]+' '+yy+'</h2><p class="hand muted">'+st+' · '+daysIn(yy,mm)+' days</p></div>'+
+      '<div class="mt"><h2>'+MONTHS[mm]+' '+yy+'</h2><p class="hand muted">'+st+' · <i class="dot" style="background:'+paletteFor(ym)[0]+'"></i>'+flowerName(ym)+' · '+daysIn(yy,mm)+' days</p></div>'+
       '<button class="circ" id="gnm" aria-label="Next month">›</button></div>';
     s+=top+monthSVG(ym);
   }else{
@@ -862,7 +863,7 @@ function renderBouquet(){
   var legend='<div class="legend">'+TIERS.map(function(tr){
     var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"#58391F":tr.k==="wilting"?"#B98552":tierFill(tr.k,paletteFor(today().slice(0,7))[0]);
     return '<span><i class="sw" style="background:'+f+'"></i>'+tr.name+'</span>';
-  }).join("")+'<span><i class="sw" style="background:var(--paper)"></i>Ahead</span></div>';
+  }).join("")+'<span><i class="sw" style="background:var(--paper);background:color-mix(in srgb, '+paletteFor(today().slice(0,7))[0]+' 30%, var(--paper))"></i>Ahead</span></div>';
 
   var past="";
   for(var y=yi-1;y>=0;y--){
