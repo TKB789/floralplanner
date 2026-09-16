@@ -191,7 +191,7 @@ ul.dl li+li{border-top:1px solid var(--line)}
 ul.dl .d{color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* header tools */
-.theme{display:block;margin:0 0 8px auto;background:var(--paper);border:1.5px solid var(--ink);border-radius:99px;
+.theme{display:block;margin:0 0 2px auto;font-size:.92rem;padding:2px 10px;background:var(--paper);border:1.5px solid var(--ink);border-radius:99px;
   padding:4px 12px;font-family:var(--hand);font-size:1rem;cursor:pointer;color:var(--ink)}
 .nudge{display:block;text-align:center;margin:10px auto 0;font-family:var(--hand);font-size:1.05rem;color:var(--ink);
   background:none;border:1.5px dashed var(--ink);border-radius:12px;padding:6px 12px;cursor:pointer}
@@ -280,6 +280,112 @@ fieldset legend{font-size:.88rem;color:var(--ink2);margin-bottom:6px}
 .mglegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-family:var(--hand);font-size:1rem;color:var(--ink2)}
 .mglegend span{display:inline-flex;align-items:center;gap:6px}
 .mglegend i{width:12px;height:12px;border-radius:4px;border:1.2px solid var(--ink);display:inline-block}
+/* compact */
+.wrap{padding-top:12px}
+header{margin-bottom:4px}
+h1{font-size:clamp(2rem,9.5vw,3rem)}
+.span{margin-top:4px;font-size:1.05rem}
+nav{margin:10px 0 14px}
+.seg{margin-bottom:10px}
+.mhead .mt p{font-size:1rem}
+.prog{margin:6px 0 0}
+.progtop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:.9rem;line-height:1.35}
+.hint{display:flex;align-items:center;gap:6px;margin:5px 0 0;font-family:var(--hand);font-size:1.02rem;line-height:1.3;color:var(--ink2)}
+.drop{width:14px;height:18px;flex:0 0 auto}
+.water{display:flex;align-items:center;gap:8px;margin-top:6px}
+.wl,.wc{font-family:var(--hand);font-size:1rem;color:var(--ink2)}
+.wc{min-width:2.2em;text-align:right;font-variant-numeric:tabular-nums}
+.drops{display:flex;flex:1;justify-content:space-between;max-width:320px}
+.wd{background:none;border:0;padding:3px;cursor:pointer;line-height:0;border-radius:8px}
+.wd svg{width:22px;height:28px}
+.wd path{fill:var(--paper);stroke:var(--ink);stroke-width:1.3;transition:fill .15s}
+.wd.on path{fill:#6FB8EA}
+.wd:disabled{opacity:.35;cursor:default}
+.drop path:first-child{fill:#6FB8EA;stroke:var(--ink);stroke-width:1.3}
+.drop path:last-child{stroke:#fff;stroke-width:1.2;stroke-linecap:round}
+.meter.sm{height:6px;margin-top:5px}
+.nudge{font-size:.98rem;padding:4px 10px;margin-top:10px}
+.daypanel{margin-top:18px;padding-top:14px}
+.dayhead h2{font-size:1.35rem}
+.dnav{align-items:center}
+.chip.sm{padding:3px 12px;font-size:1rem;white-space:nowrap}
+.pri{margin:12px 0 0;padding:10px 14px;box-shadow:3px 3px 0 var(--ink)}
+.group{margin:16px 0 0}
+ul.items li{padding:7px 0}
+.empty{margin:16px 0;padding:16px;border:1.5px dashed var(--line);border-radius:14px;text-align:center}
+.empty p{margin:0 0 10px}
+.moodgrid{margin-top:22px;padding-top:12px}
+textarea{min-height:64px}
+ul.items li{grid-template-columns:52px 28px 1fr;gap:0 8px;padding:6px 0}
+ul.items .box{width:26px;height:26px}
+ul.items .box[aria-pressed="true"]::after{left:8px;top:3px}
+.it .nm{font-size:.97rem}
+.it .sb{font-size:.8rem;margin-top:0}
+.t{font-size:.78rem}
+/* edit timeline */
+.tl{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.tl li{display:grid;grid-template-columns:50px 1fr 30px;gap:8px;align-items:start;padding:4px 0;border-bottom:1px dashed var(--line);min-height:34px}
+.tl li.hr{border-top:1px solid var(--line)}
+.tlt{font-size:.78rem;color:var(--ink2);padding-top:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tl li:not(.hr) .tlt{opacity:.5;font-size:.7rem}
+.tlb{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tli{display:flex;gap:8px;align-items:center;padding:4px 8px;border-radius:10px;border:1.5px solid var(--ink);background:var(--paper);font-size:.9rem;line-height:1.3}
+.tli .edit{flex:0 0 auto;width:26px;height:26px}
+.tli.info{border-style:dashed;color:var(--ink2)}
+.tli.c-brk{border-style:dotted}
+.tli.c-move{box-shadow:inset 4px 0 0 var(--ink)}
+.tli.c-study{box-shadow:inset 4px 0 0 var(--ink2)}
+.tlc{font-size:.82rem;color:var(--ink2);padding:6px 0 0 4px}
+.tladd{width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--ink2);background:none;color:var(--ink2);cursor:pointer;font-size:1.05rem;line-height:1;margin-top:2px}
+.tl li.free .tladd{border-style:solid;border-color:var(--ink);color:var(--ink)}
+/* bullet-journal tips */
+.spread{text-align:center;margin:4px 0 18px}
+.spread h2{font-size:1.9rem;margin:0;text-shadow:2px 2px 0 var(--paper),3px 3px 0 var(--ink)}
+.spread p{margin:2px 0 0;font-size:1.1rem}
+.bj{display:grid;grid-template-columns:1fr 1fr;gap:22px 12px}
+.blk{position:relative;border:1.5px solid var(--ink);background:var(--paper);padding:20px 14px 12px;min-width:0}
+.blk p{margin:0 0 8px;font-size:.92rem;line-height:1.5}
+.span2{grid-column:1/-1}
+.b1{border-radius:18px 14px 20px 12px}
+.b2{border-radius:12px 20px 14px 18px;border-style:dashed}
+.b3{border-radius:20px 12px 18px 14px}
+.b4{border-radius:14px 18px 12px 22px;box-shadow:3px 3px 0 var(--ink)}
+.b5{border-radius:16px;border-style:dashed}
+.b6{border-radius:22px 14px 18px 16px}
+.b7{border-radius:12px 16px 20px 14px;border-style:dotted;border-width:2px}
+.tape{position:absolute;top:-12px;left:14px;padding:1px 14px;font-family:var(--hand);font-size:1.05rem;color:#141414;
+  transform:rotate(-2.5deg);box-shadow:0 1px 0 rgba(0,0,0,.08);white-space:nowrap}
+.t1{background:repeating-linear-gradient(45deg,#F9D66B 0 6px,#FBE39A 6px 12px)}
+.t2{background:repeating-linear-gradient(-45deg,#F5B3C8 0 6px,#F9CCDA 6px 12px);transform:rotate(2deg)}
+.t3{background:repeating-linear-gradient(90deg,#A9D18E 0 5px,#C4E0B0 5px 10px)}
+.t4{background:repeating-linear-gradient(45deg,#9DCBEF 0 6px,#C2DEF5 6px 12px);transform:rotate(1.5deg)}
+.t5{background:repeating-linear-gradient(0deg,#CDB8EA 0 4px,#DED0F1 4px 8px)}
+.t6{background:repeating-linear-gradient(-45deg,#F6B48A 0 6px,#F9CCAE 6px 12px);transform:rotate(-1.5deg)}
+.fine{font-size:.8rem !important;color:var(--ink2)}
+.keygrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px 12px}
+.keygrid li{display:flex;align-items:center;gap:10px}
+.keygrid .sw{width:20px;height:20px;flex:0 0 auto}
+.keygrid span{display:flex;flex-direction:column;line-height:1.2}
+.keygrid b{font-weight:650;font-size:.95rem}
+.keygrid small{font-size:.78rem;color:var(--ink2)}
+.ticks{list-style:none;margin:0;padding:0}
+.ticks li{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;line-height:1.35;padding:4px 0}
+.ticks i{flex:0 0 auto;width:14px;height:14px;margin-top:2px;border:1.5px solid var(--ink);border-radius:4px;position:relative}
+.ticks i::after{content:"";position:absolute;left:3px;top:-3px;width:5px;height:10px;border:solid var(--ink);border-width:0 2px 2px 0;transform:rotate(40deg)}
+.ptiles{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ptiles li{border:1.2px solid var(--line);border-radius:10px;padding:4px 6px;text-align:center;font-size:.74rem;line-height:1.2;color:var(--ink2)}
+.ptiles b{display:block;font-size:1.25rem;color:var(--ink);font-variation-settings:"opsz" 72}
+.wdemo{display:flex;gap:6px;margin:2px 0 10px}
+.wdemo svg{width:20px;height:26px}
+.wdemo path{fill:var(--paper);stroke:var(--ink);stroke-width:1.3}
+.wdemo path.f{fill:#6FB8EA}
+.moodkey{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-family:var(--hand);font-size:1.05rem}
+.moodkey span{display:inline-flex;align-items:center;gap:6px}
+.moodkey i{width:14px;height:14px;border-radius:4px;border:1.2px solid var(--ink);display:inline-block}
+.tcards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.tcards div{border-left:3px solid var(--ink);padding:2px 0 2px 8px}
+.tcards h4{margin:0;font-family:var(--hand);font-weight:400;font-size:1.08rem;line-height:1.2}
+.tcards p{margin:2px 0 0;font-size:.8rem;line-height:1.4;color:var(--ink2)}
 footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink2);font-size:1rem}
 
 @media (prefers-reduced-motion:no-preference){
@@ -347,25 +453,82 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
   <section class="view" id="v-plan"></section>
 
   <section class="view" id="v-tips">
-    <h2>Making time for everything</h2>
-    <p class="muted">The schedule in this planner is built from these. Breaks are points, not slack — skipping them costs you color.</p>
-    <div class="card">
-      <h3>How a day gets its color</h3>
-      <p class="small">Every task is worth points: workouts 3, study sprints 2, priorities 2, and most other tasks 1. You can change any task's points when you edit it. A day's color comes from the share of points you earn:</p>
-      <p class="small"><b>Full bloom</b> 90%+ and every priority done · <b>In bloom</b> 75–89% · <b>Fading</b> 55–74% · <b>Wilting</b> 35–54% · <b>Wilted</b> 1–34% · <b>Gray</b> nothing checked.</p>
+    <div class="spread">
+      <h2>Tips &amp; key</h2>
+      <p class="hand muted">A quick reference for your garden</p>
     </div>
-    <ol class="tips">
-      <li><b>Work in short sprints with a real break after each.</b>Every study block here is 25 minutes, then 5 off. In one small experiment, people given a 5-minute break every 20 minutes got more done in two hours than when breaks were up to them — and they wandered off less on their own. <span class="src"><a href="https://pubmed.ncbi.nlm.nih.gov/37167429/" target="_blank" rel="noopener">PubMed, 2023</a></span></li>
-      <li><b>Take a longer break about every hour and a half.</b>After three sprints you get 15 minutes away from the screen. MIT's Robert Pozen suggests roughly a 15-minute pause every 75–90 minutes, since focus tends to fade on about that cycle. <span class="src"><a href="https://www.work-fit.com/blog/how-effective-breaks-at-work-increase-productivity/" target="_blank" rel="noopener">Work-Fit</a></span></li>
-      <li><b>Spread studying across the week instead of one long night.</b>The same hours split into small daily sessions are remembered far better than one big block — which is why there's a study sprint every day, not a Sunday marathon. <span class="src"><a href="https://www.retrievalpractice.org/strategies/optimal-spacing" target="_blank" rel="noopener">Retrieval Practice</a></span></li>
-      <li><b>Test yourself instead of rereading.</b>Pulling ideas out of memory strengthens them more than highlighting or rereading does. Your one-page summaries and cheat sheets are written from memory first, then checked. <span class="src"><a href="https://evidencebased.education/resource/retrieval-and-spaced-practice-study-strategies-that-must-be-combined/" target="_blank" rel="noopener">Evidence Based Education</a></span></li>
-      <li><b>Make breaks move you.</b>Stand, walk, refill water. A review of 80+ studies found regular breaks help both well-being and performance, but most people skip them or take the wrong kind. <span class="src"><a href="https://hbr.org/2023/05/how-to-take-better-breaks-at-work-according-to-research" target="_blank" rel="noopener">Harvard Business Review</a></span></li>
-      <li><b>Cut homework into named steps.</b>"Do HW 4" is hard to start. "Read every question," "load the data," "first model," "write up" each fit inside one sprint, so every sitting ends with something done.</li>
-      <li><b>Cook once, eat three times.</b>Sunday's 90-minute prep covers the weekday protein and sides, so weeknight cooking is a 10-minute snack, not an hour.</li>
-      <li><b>Clean in ten-minute pieces.</b>One small chore a day plus a nightly kitchen reset keeps Sunday's reset to 45 minutes.</li>
-      <li><b>Submit early; use your drops on purpose.</b>Homework is due 11 pm Pacific on Wednesdays, but the plan aims for 9 pm. Your two lowest homework grades are dropped — treat those as planned relief for a rough week, not something to spend by accident.</li>
-      <li><b>Plan tomorrow tonight.</b>Five minutes before bed: look at tomorrow's list, move anything that won't fit, and decide which sprint matters most.</li>
-    </ol>
+    <div class="bj">
+
+      <div class="blk span2 b1">
+        <span class="tape t1">Key</span>
+        <div id="tipLegend"></div>
+      </div>
+
+      <div class="blk b2">
+        <span class="tape t2">Full bloom needs</span>
+        <ul class="ticks">
+          <li><i></i>90%+ of the day's points</li>
+          <li><i></i>Every priority checked</li>
+          <li><i></i>At least 1 water drop</li>
+        </ul>
+      </div>
+
+      <div class="blk b3">
+        <span class="tape t3">Points</span>
+        <ul class="ptiles">
+          <li><b>3</b>Workout</li>
+          <li><b>2</b>Learn</li>
+          <li><b>2</b>Priority</li>
+          <li><b>1</b>Regular &amp; others</li>
+        </ul>
+        <p class="fine">Change any task's points when you edit it.</p>
+      </div>
+
+      <div class="blk span2 b4">
+        <span class="tape t4">Water</span>
+        <div class="wdemo" aria-hidden="true">
+          <svg viewBox="0 0 16 20"><path class="f" d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path class="f" d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path class="f" d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+          <svg viewBox="0 0 16 20"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg>
+        </div>
+        <p><b>Every body is different.</b> The 8 drops are your daily target, and each drop can be whatever amount you need — a glass, a bottle, or a cup of tea.</p>
+        <p class="fine">No tasks on a day? Water becomes that day's goal: fill all 8 drops for full bloom.</p>
+      </div>
+
+      <div class="blk span2 b5">
+        <span class="tape t5">Moods</span>
+        <div id="tipMoods" class="moodkey"></div>
+        <p class="fine">Pick one each day. Your moods fill in month by month at the bottom of the Garden.</p>
+      </div>
+
+      <div class="blk span2 b6">
+        <span class="tape t6">Making time</span>
+        <div class="tcards">
+          <div><h4>Sprint, then rest</h4><p>25 minutes of work, 5 minutes off. Short scheduled breaks help you get more done.</p></div>
+          <div><h4>Longer break every 90 min</h4><p>After about three sprints, step away for 15 minutes.</p></div>
+          <div><h4>Little and often</h4><p>Short daily sessions stick better than one long cram.</p></div>
+          <div><h4>Test yourself</h4><p>Write what you remember first, then check your notes.</p></div>
+          <div><h4>Move on breaks</h4><p>Stand, stretch, refill your water.</p></div>
+          <div><h4>Name the next step</h4><p>"Load the data" is easier to start than "do homework."</p></div>
+          <div><h4>Cook once, eat three times</h4><p>One prep session covers busy weeknights.</p></div>
+          <div><h4>Clean in 10-minute pieces</h4><p>One small chore a day keeps the weekend free.</p></div>
+          <div><h4>Finish early</h4><p>Aim to submit a couple of hours before a deadline.</p></div>
+          <div><h4>Plan tonight</h4><p>Five minutes before bed: pick tomorrow's priorities.</p></div>
+        </div>
+        <p class="fine">Sources: <a href="https://pubmed.ncbi.nlm.nih.gov/37167429/" target="_blank" rel="noopener">PubMed 2023</a> · <a href="https://www.work-fit.com/blog/how-effective-breaks-at-work-increase-productivity/" target="_blank" rel="noopener">Work-Fit</a> · <a href="https://www.retrievalpractice.org/strategies/optimal-spacing" target="_blank" rel="noopener">Retrieval Practice</a> · <a href="https://evidencebased.education/resource/retrieval-and-spaced-practice-study-strategies-that-must-be-combined/" target="_blank" rel="noopener">Evidence Based Education</a> · <a href="https://hbr.org/2023/05/how-to-take-better-breaks-at-work-according-to-research" target="_blank" rel="noopener">HBR</a></p>
+      </div>
+
+      <div class="blk span2 b7">
+        <span class="tape t1">The garden</span>
+        <p>Each flower is a month and each petal section is a day. A new flower grows every month, and finished months stay. Each month has its own color — the key above uses this month's.</p>
+      </div>
+
+    </div>
   </section>
 
   <dialog id="dlg" aria-labelledby="dlgT">
@@ -377,9 +540,9 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
         <label>Start<input id="fTime" type="time" required></label>
         <label>Minutes<input id="fDur" type="number" min="5" max="600" step="5" required></label>
         <label>Type<select id="fCat">
-          <option value="study">Study</option><option value="move">Workout</option><option value="cook">Cooking</option>
+          <option value="other">Regular task</option><option value="study">Learn</option><option value="move">Workout</option><option value="cook">Cooking</option>
           <option value="clean">Cleaning</option><option value="brk">Break / rest</option><option value="plan">Planning</option>
-          <option value="other">Other</option></select></label>
+</select></label>
         <label>Points<select id="fPts"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
       </div>
       <fieldset><legend>Apply to</legend><div class="radios" id="fScope"></div></fieldset>
@@ -442,7 +605,7 @@ function toMin(t){var p=String(t||"").split(":");return (+p[0]||0)*60+(+p[1]||0)
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
 /* ---------- state ---------- */
-var settings={start:today(),wake:"06:30",free:"17:30",gview:"grown",ahead:0,theme:"auto",lastBackup:""};
+var settings={start:today(),wake:"06:30",free:"17:30",gview:"grown",ahead:0,theme:"auto",lastBackup:"",builtin:false};
 var routine={add:{},hide:{},edit:{}};   // weekly changes, keyed by weekday 0-6
 var dayx={};                            // one-day changes: {"2026-11-01": {add:[], hide:[], edit:{}}}
 var editing=false;
@@ -452,10 +615,16 @@ var view="bouquet", dayDs=today();
 function loadLocal(){
   try{
     var raw=localStorage.getItem(KEY);
-    if(raw){var o=JSON.parse(raw);applyData(o)}
+    if(raw){
+      var o=JSON.parse(raw);
+      // browsers that already used the planner keep the sample plan they were using
+      if(o.settings&&o.settings.builtin===undefined)o.settings.builtin=true;
+      applyData(o);
+    }
   }catch(e){}
 }
 function applyData(o){
+  if(o.settings&&o.settings.builtin===undefined)o.settings.builtin=true;
   if(o.settings)settings=Object.assign(settings,o.settings);
   if(o.months)months=o.months;
   routine=Object.assign({add:{},hide:{},edit:{}},o.routine||{});
@@ -524,6 +693,7 @@ function studyBlocks(ds){
 }
 
 function contextFor(ds){
+  if(!settings.builtin)return {line:"",due:null};
   if(ds<"2026-08-24"||ds>"2026-12-13")return {line:"Between courses",due:null};
   var q=quizFor(ds);
   if(ds>"2026-12-02")return {line:"ISYE 6501 · Final quiz window",due:q?q.name+" closes "+fmtShort(q.close)+", 11 pm":null};
@@ -620,10 +790,10 @@ function baseItems(ds){
 }
 
 PTS.other=1;PTS.pri=2;
-var CAT_NAMES={pri:"Priorities",study:"Study",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",plan:"Planning",other:"Other"};
+var CAT_NAMES={pri:"Priorities",study:"Learn",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",plan:"Planning",other:"Regular"};
 function partFor(t){return t<720?"Morning":(t<toMin(settings.free)?"Daytime":"Evening")}
 function items(ds){
-  var dow=parse(ds).getDay(),x=dayx[ds]||{},list=baseItems(ds);
+  var dow=parse(ds).getDay(),x=dayx[ds]||{},list=settings.builtin?baseItems(ds):[];
   var hideW=routine.hide[dow]||[],hideD=x.hide||[],editW=routine.edit[dow]||{},editD=x.edit||{};
   list=list.concat((routine.add[dow]||[]).map(function(it){return Object.assign({custom:"week"},it)}));
   list=list.concat((x.add||[]).map(function(it){return Object.assign({custom:"day"},it)}));
@@ -642,7 +812,7 @@ function items(ds){
   return out;
 }
 function hiddenItems(ds){
-  var dow=parse(ds).getDay(),x=dayx[ds]||{},all=baseItems(ds).concat(routine.add[dow]||[]);
+  var dow=parse(ds).getDay(),x=dayx[ds]||{},all=(settings.builtin?baseItems(ds):[]).concat(routine.add[dow]||[]);
   var res=[];
   all.forEach(function(it){
     if(it.info)return;
@@ -669,9 +839,11 @@ function scoreFor(ds,arr){
     var on=arr.indexOf(it.id)>-1;if(on)got+=it.pts;
     if(it.pri&&!on)priLeft++;
   });
-  var p=max?got/max:0;
-  if(priLeft&&p>=.9)p=.89;          // full bloom needs every priority done
-  return {max:max,got:got,p:p,priLeft:priLeft};
+  var r=rec(ds),w=r&&r.w||0,dry=!w;
+  if(!max)return {max:0,got:0,p:w/8,priLeft:0,dry:dry,water:w,waterOnly:true};   // no tasks: water is the goal
+  var p=got/max;
+  if((priLeft||dry)&&p>=.9)p=.89;   // full bloom needs every priority done and at least one drop of water
+  return {max:max,got:got,p:p,priLeft:priLeft,dry:dry,water:w};
 }
 function setChecks(ds,arr){
   var ym=ymOf(ds),d=String(+ds.slice(8));
@@ -758,12 +930,7 @@ function designFor(ym){
 }
 /* Real flower colors: [name, color family, four shades] */
 var FLORA=[
-  ["Sunflower","yellow",["#F5B700","#FFC928","#E39A00","#FFD95A"],"Golden yellow"],
-  ["Daffodil","yellow",["#F7D21E","#FFE36A","#EDB200","#FBE58E"],"Lemon yellow"],
-  ["Black-eyed Susan","yellow",["#F2B705","#F7C933","#E09B00","#FAD766"],"Amber"],
-  ["Marigold","orange",["#F28C00","#FFA62B","#DD6F00","#FFBA52"],"Bright orange"],
-  ["California poppy","orange",["#FF8C1A","#FFA640","#EE6A0C","#FFB870"],"Tangerine"],
-  ["Bird of paradise","orange",["#FF7A12","#FF9636","#E3600A","#FFAE5E"],"Blaze orange"],
+  ["Marigold","orange",["#F28C00","#FFA62B","#DD6F00","#FFBA52"],"Marigold"],
   ["Red poppy","red",["#D7261E","#E8452C","#B51B16","#F0614A"],"Scarlet"],
   ["Red tulip","red",["#C8102E","#E0303F","#A30C25","#EB5463"],"Crimson"],
   ["Scarlet anemone","red",["#D1223F","#E3405A","#AE1832","#EE6479"],"Cherry red"],
@@ -774,7 +941,7 @@ var FLORA=[
   ["Bougainvillea","magenta",["#C71585","#D83BA2","#A5126F","#E361B7"],"Magenta"],
   ["Fuchsia","magenta",["#D0208F","#E046A6","#AD1A77","#EA70BD"],"Fuchsia"],
   ["Orchid","purple",["#B04CC8","#C672DA","#9235AE","#D893E6"],"Bright purple"],
-  ["Lavender","purple",["#8E6CC4","#A68AD6","#7654AE","#BAA3E1"],"Lavender"],
+  ["Lilac","purple",["#A487D6","#B89FE0","#8F70C6","#CAB6EA"],"Lilac"],
   ["Allium","purple",["#9A5CC6","#B07DD6","#8045AE","#C49BE2"],"Amethyst"],
   ["Iris","violet",["#5B3FA8","#7458C4","#472F8C","#8E78D2"],"Deep violet"],
   ["Violet","violet",["#6A2C91","#8445AE","#55217A","#9C64C4"],"Royal purple"],
@@ -788,15 +955,15 @@ var FLORA=[
   ["Coral zinnia","coral",["#F4664A","#F78467","#E04B31","#FA9E86"],"Coral"],
   ["Coral peony","coral",["#F2705E","#F68D7E","#DE5645","#F9A89C"],"Salmon"],
   ["Gerbera","coral",["#FF5E4D","#FF7D6E","#E8463A","#FF9C91"],"Tomato red"],
-  ["Bells of Ireland","green",["#6FB33F","#8CC65E","#579A2C","#A6D47F"],"Leaf green"],
-  ["Green zinnia","green",["#8DBF3A","#A5CF5C","#73A52A","#BCDC80"],"Lime green"],
+  ["Orange-red","orangered",["#F04A0C","#F76A30","#D23A04","#FA8A5A"],"Orange-red"],
+  ["Turquoise","turquoise",["#1FB5B0","#3FC7C1","#15948F","#6FD6D1"],"Turquoise"],
   ["Clematis","violet",["#7A4FC0","#9270D0","#633DA4","#A98DDC"],"Purple"],
   ["Camellia","pink",["#E4577E","#EC7A99","#CC3E66","#F29AB2"],"Raspberry"]
 ];
 // First tracking year follows the seasons
-var YEAR1_FLORA=["Sunflower","Marigold","Iris","Red poppy","Cornflower","Peony","Daffodil","Lavender","Coral zinnia","Forget-me-not","Hibiscus","Bells of Ireland"];
+var YEAR1_FLORA=["Lilac","Marigold","Iris","Red poppy","Cornflower","Peony","Turquoise","Forget-me-not","Coral zinnia","Hibiscus","Orange-red","Orchid"];
 function floraByName(n){for(var i=0;i<FLORA.length;i++)if(FLORA[i][0]===n)return FLORA[i];return FLORA[0]}
-var GROUP={red:"warm",coral:"warm",orange:"warm",yellow:"sun",green:"sun",pink:"rose",magenta:"rose",purple:"cool",violet:"cool",blue:"cool",sky:"cool"};
+var GROUP={red:"warm",coral:"warm",orange:"warm",orangered:"warm",turquoise:"sea",pink:"rose",magenta:"rose",purple:"cool",violet:"cool",blue:"cool",sky:"cool"};
 var floraMemo={};
 function floraAt(mi){
   if(mi<0)mi=-mi;
@@ -1003,6 +1170,18 @@ function monthSVG(ym){
 function addMonths(ym,n){var y=+ym.slice(0,4),m=+ym.slice(5)-1+n;y+=Math.floor(m/12);m=((m%12)+12)%12;return y+"-"+pad(m+1)}
 function firstYM(){return settings.start.slice(0,7)}
 
+function tierRange(k){return {full:"90%+",bloom:"75–89%",fading:"55–74%",wilting:"35–54%",wilted:"1–34%",gray:"Nothing checked"}[k]}
+function tipLegendHTML(){
+  var ym=today().slice(0,7),hue=paletteFor(ym)[0];
+  return '<ul class="keygrid">'+TIERS.map(function(tr){
+    var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"#58391F":tr.k==="wilting"?"#B98552":tierFill(tr.k,hue);
+    return '<li><i class="sw" style="background:'+f+'"></i><span><b>'+tr.name+'</b><small>'+tierRange(tr.k)+'</small></span></li>';
+  }).join("")+'<li><i class="sw" style="background:var(--paper)"></i><span><b>Ahead</b><small>Still to come</small></span></li></ul>';
+}
+function renderTips(){
+  document.getElementById("tipLegend").innerHTML=tipLegendHTML();
+  document.getElementById("tipMoods").innerHTML=MOODS.map(function(m){return '<span><i style="background:'+m[2]+'"></i>'+m[1]+'</span>'}).join("");
+}
 function legendHTML(ym,caption){
   var hue=paletteFor(ym)[0];
   var s='<div class="legend">'+TIERS.map(function(tr){
@@ -1017,6 +1196,51 @@ function needsBackup(){
   if(!any)return false;
   if(!settings.lastBackup)return true;
   return (parse(today())-parse(settings.lastBackup))/864e5>30;
+}
+
+function waterRow(ds,w,future){
+  var s='<div class="water" role="group" aria-label="Glasses of water"><span class="wl">Water</span><span class="drops">';
+  for(var i=1;i<=8;i++){
+    s+='<button class="wd'+(i<=w?" on":"")+'" data-w="'+i+'" aria-pressed="'+(i<=w)+'"'+(future?" disabled":"")+
+      ' aria-label="'+i+' glass'+(i>1?"es":"")+' of water"><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/></svg></button>';
+  }
+  return s+'</span><span class="wc">'+w+'/8</span></div>';
+}
+function progressHTML(){
+  var ds=dayDs,t=today(),sc=scoreFor(ds,checks(ds)),p=sc.p,tier=tierOf(p),future=ds>t;
+  var nextT=null;for(var i=TIERS.length-1;i>=0;i--){if(TIERS[i].min>p+1e-9){nextT=TIERS[i];break}}
+  var need=nextT?Math.ceil(nextT.min*sc.max-1e-9)-sc.got:0;
+  var label=future?"Ahead":(sc.got||sc.water&&sc.waterOnly)?tier.name:(ds<t&&ds>=settings.start?"Gray":"Not started");
+  var drop='<svg class="drop" viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5C8 1.5 2 9.2 2 13.2a6 6 0 0 0 12 0C14 9.2 8 1.5 8 1.5Z"/><path d="M5.2 13.4a2.8 2.8 0 0 0 2.4 2.7" fill="none"/></svg>';
+  var hint,water=false;
+  if(future)hint="You can check tasks off once the day arrives";
+  else if(sc.waterOnly&&ds<=t){
+    water=ds===t&&sc.water<8;
+    hint=ds<t?(sc.water?"No tasks — "+sc.water+" of 8 drops":"No tasks or water logged this day")
+      :sc.water>=8?"All 8 drops — full bloom!":"No tasks today, so water is the goal — fill all 8 drops";
+  }
+  else if(ds<t)hint=sc.got?"This day finished in "+tier.name.toLowerCase():"Nothing was checked off this day";
+  else if((sc.priLeft||sc.dry)&&sc.got/sc.max>=.9){
+    water=sc.dry;
+    hint=sc.priLeft&&sc.dry?"Finish your priorities and drink a glass of water for full bloom"
+      :sc.priLeft?"Finish your "+(sc.priLeft===1?"last priority":"priorities")+" for full bloom"
+      :"Drink at least one glass of water for full bloom";
+  }
+  else if(p>=.9)hint="Full bloom — nicely done";
+  else{
+    water=true;
+    hint=!sc.got?"Drink some water and start your first task"
+      :tier.k==="wilted"?"Hydrate and complete more tasks to prevent wilting"
+      :tier.k==="wilting"?"Hydrate and finish a few more tasks to perk up"
+      :tier.k==="fading"?"Water break, then a few more tasks to brighten up"
+      :"A sip of water and a few more tasks to full bloom";
+  }
+  var col=(sc.got||sc.waterOnly&&sc.water)&&!future?tierFill(tier.k,hueFor(ds),ds):"var(--ink)";
+  if(String(col).indexOf("url(")===0)col=tier.k==="gray"?"#A2A29B":"#58391F";
+  return '<div class="prog" role="group" aria-label="Progress for '+fmtDay(ds)+'">'+
+    '<div class="progtop"><b>'+(ds===t?"Today":fmtShort(ds))+'</b><span>'+label+' · '+(sc.waterOnly?sc.water+'/8 drops':sc.got+'/'+sc.max+' pts')+'</span></div>'+
+    '<div class="meter sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(p*100)+'"><i style="width:'+(p*100).toFixed(1)+'%;background:'+col+'"></i></div>'+
+    '<p class="hint">'+(water?drop:'')+'<span>'+hint+'</span></p>'+waterRow(ds,sc.water,future)+'</div>';
 }
 
 function renderBouquet(){
@@ -1035,21 +1259,21 @@ function renderBouquet(){
     top='<div class="mhead"><button class="circ" id="gpm" aria-label="Previous month"'+(ym<=firstYM()?" disabled":"")+'>‹</button>'+
       '<div class="mt"><h2>'+MONTHS[mm]+' '+yy+'</h2><p class="hand muted">'+st+' · <i class="dot" style="background:'+paletteFor(ym)[0]+'"></i>'+flowerName(ym)+' · '+daysIn(yy,mm)+' days</p></div>'+
       '<button class="circ" id="gnm" aria-label="Next month">›</button></div>';
-    s+=top+monthSVG(ym);
+    s+=top+monthSVG(ym)+progressHTML();
   }else{
     var shown=mode==="year"?12:Math.min(12,count+ahead);
     var over=mode==="year"?0:Math.max(0,count+ahead-12);
     var line=mode==="year"
       ? 'Year '+(yi+1)+' · '+(count-1)+' finished, '+(12-count)+' ahead'
       : MONTHS[cur.m]+' · '+colorName(cur.ym)+' · growing · '+(count-1)+' finished'+(ahead?' · '+ahead+' ahead':'');
-    s+='<div class="ghead"><p class="hand">'+line+'</p><a class="tolist" href="#dayPanel">Today\u2019s list \u2193</a></div>';
+    s+='<div class="ghead"><p class="hand">'+line+'</p></div>';
     if(mode==="grown"){
       s+='<div class="ahead"><span class="hand">Months ahead</span>'+
         '<button class="circ sm" id="ahm" aria-label="Show fewer months ahead"'+(ahead<=0?" disabled":"")+'>−</button>'+
         '<b aria-live="polite">'+ahead+'</b>'+
         '<button class="circ sm" id="ahp" aria-label="Show more months ahead"'+(ahead>=12?" disabled":"")+'>+</button></div>';
     }
-    s+=gardenSVG(yi,shown,true);
+    s+=gardenSVG(yi,shown,true)+progressHTML();
     if(over>0){
       var nx=yearMonthsFor(yi+1);
       s+='<h3 class="hand" style="font-weight:400">Coming up in year '+(yi+2)+'</h3>'+gardenSVG(yi+1,over,true);
@@ -1058,8 +1282,6 @@ function renderBouquet(){
 
   var logged=0,full=0;
   Object.keys(months).forEach(function(ym){Object.keys(months[ym]).forEach(function(d){var r=months[ym][d];if(r.p>0)logged++;if(r.p>=.9)full++})});
-  var legYM=mode==="month"?(ymOf(dayDs)<firstYM()?firstYM():ymOf(dayDs)):ymOf(dayDs);
-  var legend=legendHTML(legYM,mode!=="month");
 
   var past="";
   for(var y=yi-1;y>=0;y--){
@@ -1068,14 +1290,21 @@ function renderBouquet(){
   }
 
   el.innerHTML=s+
-    '<p class="sum">'+(logged?logged+(logged===1?" day":" days")+" logged · "+full+" in full bloom":"Check off today's list below to color your first day")+'</p>'+legend+
-    '<p class="muted small" style="text-align:center;margin-top:12px">A new flower appears each month, and finished months stay in the garden. Each petal is split into sections, one per day — tap one to open that day.</p>'+
     (needsBackup()?'<button class="nudge" id="nudge">'+(settings.lastBackup?"It\u2019s been over a month since your last backup →":"Save a backup of your garden →")+'</button>':'')+
     '<div id="dayPanel" class="daypanel"></div>'+
     (past?'<div class="past"><h2>Earlier years</h2>'+past+'</div>':'');
   renderDay();
   var ng=document.getElementById("nudge");
   if(ng)ng.onclick=function(){setView("plan");setTimeout(function(){var d=document.getElementById("dataCard");if(d)d.scrollIntoView({block:"start"})},30)};
+  el.querySelectorAll(".wd").forEach(function(b){
+    b.onclick=function(){
+      var n=+b.getAttribute("data-w"),r=rec(dayDs),cur=r&&r.w||0;
+      setMeta(dayDs,{w:cur===n?n-1:n});
+      setChecks(dayDs,checks(dayDs));
+      var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
+      var f=document.querySelector('.wd[data-w="'+n+'"]');if(f)f.focus({preventScroll:true});
+    };
+  });
   el.querySelectorAll(".seg button").forEach(function(b){
     b.onclick=function(){settings.gview=b.getAttribute("data-gv");saveSettings();var y=window.scrollY;renderBouquet();window.scrollTo(0,y)};
   });
@@ -1111,8 +1340,8 @@ function scorePetal(fill,op){
     (fill?' style="fill:'+fill+'" fill-opacity="'+op+'"':'')+'/><path d="M0 -14 L0 -44" class="ink" stroke-width="1.2" stroke-linecap="round"/></svg>';
 }
 
-var MOODS=[["normal","Normal","#8FB4E8"],["happy","Happy","#F2C94C"],["special","Special","#C9B6E4"],
-  ["tired","Sick / tired","#9CCB6B"],["sad","Sad","#C4A57A"],["angry","Angry","#EE8FB0"]];
+var MOODS=[["normal","Normal","#8FB4E8"],["happy","Happy","#9CCB6B"],["special","Special","#C9B6E4"],
+  ["tired","Sick / tired","#F2C94C"],["sad","Sad","#C4A57A"],["angry","Angry","#EE8FB0"]];
 function moodGrid(ds){
   var t=today(),endYM=t.slice(0,7),ym=firstYM(),rows="",counts={},any=false;
   if(ymOf(ds)>endYM&&ymOf(ds)>=ym)endYM=ymOf(ds);
@@ -1134,9 +1363,9 @@ function moodGrid(ds){
     ym=addMonths(ym,1);
   }
   var leg=MOODS.map(function(x){return '<span><i style="background:'+x[2]+'"></i>'+x[1]+(counts[x[0]]?' · '+counts[x[0]]:'')+'</span>'}).join("");
-  return '<section class="moodgrid" aria-labelledby="mgH"><h3 id="mgH">Your moods</h3>'+
+  return '<section class="moodgrid" aria-labelledby="mgH"><h3 id="mgH">Your moods overall</h3>'+
     '<p class="small muted" style="margin:0 0 10px">'+(any?"One row per month, one square per day. Tap a square to open that day.":"Pick a mood above and each month fills in as a row here.")+'</p>'+
-    '<div class="mm">'+head+rows+'</div><div class="mglegend">'+leg+'</div></section>';
+    '<div class="mm">'+head+rows+'</div></section>';
 }
 function setMeta(ds,obj){
   var ym=ymOf(ds),d=String(+ds.slice(8));
@@ -1151,17 +1380,17 @@ function setMeta(ds,obj){
 var dlgState=null;
 function uid(){return "c"+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36)}
 function hhmm(m){return pad(Math.floor(m/60)%24)+":"+pad(m%60)}
-function openTask(ds,id){
+function openTask(ds,id,at){
   var dlg=document.getElementById("dlg"),dow=parse(ds).getDay(),dn=DOW[dow];
   var it=id?items(ds).filter(function(i){return i.id===id})[0]:null;
   dlgState={ds:ds,id:id,it:it};
   document.getElementById("dlgT").textContent=it?"Edit task":"Add a task";
   document.getElementById("fName").value=it?it.name:"";
   document.getElementById("fSub").value=it?(it.sub||""):"";
-  document.getElementById("fTime").value=hhmm(it?it.t:toMin(settings.free)+60);
+  document.getElementById("fTime").value=hhmm(it?it.t:(at!=null?at:toMin(settings.free)+60));
   document.getElementById("fDur").value=it?it.dur:25;
-  document.getElementById("fCat").value=it?(CAT_NAMES[it.cat]?it.cat:"other"):"study";
-  document.getElementById("fPts").value=String(it?it.pts:2);
+  document.getElementById("fCat").value=it?(CAT_NAMES[it.cat]&&it.cat!=="pri"?it.cat:"other"):"other";
+  document.getElementById("fPts").value=String(it?it.pts:1);
   var scopes=it
     ? [["day","Just "+fmtShort(ds)],["week","Every "+dn]]
     : [["day","Just "+fmtShort(ds)],["week","Every "+dn],["weekdays","Weekdays"],["all","Every day"]];
@@ -1210,6 +1439,29 @@ function deleteTask(){
   var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
 }
 
+function timelineHTML(tasks,ds){
+  var real=tasks.filter(function(t){return !t.info});
+  var lo=360,hi=1320;
+  real.forEach(function(t){lo=Math.min(lo,t.t);hi=Math.max(hi,t.t+t.dur)});
+  lo=Math.floor(lo/30)*30;hi=Math.min(1440,Math.ceil(hi/30)*30);
+  var s='<p class="small muted" style="margin:14px 0 4px">Your day in 30-minute slots. Tap ✎ to change a task or + to add one at that time.</p><ol class="tl">';
+  for(var m=lo;m<hi;m+=30){
+    var starts=tasks.filter(function(t){return t.t>=m&&t.t<m+30});
+    var cont=real.filter(function(t){return t.t<m&&t.t+t.dur>m});
+    var body="";
+    starts.forEach(function(t){
+      if(t.info){body+='<div class="tli info">'+esc(t.name)+'</div>';return}
+      body+='<div class="tli c-'+t.cat+'"><button class="edit" data-eid="'+t.id+'" aria-label="Edit '+esc(t.name)+'">✎</button>'+
+        '<span><b>'+esc(t.name)+'</b><span class="muted small"> '+fmtTime(t.t)+' · '+t.dur+' min · '+t.pts+' pt'+(t.pts>1?"s":"")+
+        (t.custom==="day"?" · today only":"")+'</span></span></div>';
+    });
+    if(!starts.length&&cont.length)body='<div class="tlc">↳ '+esc(cont[0].name)+'</div>';
+    s+='<li class="'+(m%60===0?"hr":"")+(!starts.length&&!cont.length?" free":"")+'"><span class="tlt">'+(m%60===0?fmtTime(m).replace(":00",""):fmtTime(m).replace(/ (am|pm)/,""))+'</span>'+
+      '<div class="tlb">'+body+'</div><button class="tladd" data-at="'+m+'" aria-label="Add a task at '+fmtTime(m)+'">+</button></li>';
+  }
+  return s+'</ol>';
+}
+
 function renderDay(){
   var el=document.getElementById("dayPanel"),ds=dayDs,t=today();
   if(!el)return;
@@ -1220,23 +1472,15 @@ function renderDay(){
   var ctx=contextFor(ds);
   var fill=got?tierFill(tier.k,hue,ds):(ds<t&&ds>=settings.start?"url(#mottle)":null);
 
-  var h='<div class="dayhead"><div><h2>'+fmtDay(ds)+'</h2><p class="ctx">'+esc(ctx.line)+'</p>'+
+  var h='<div class="dayhead"><div><h2>'+DOW[parse(ds).getDay()].slice(0,3)+', '+MONTHS[parse(ds).getMonth()]+' '+parse(ds).getDate()+'</h2>'+(ctx.line?'<p class="ctx">'+esc(ctx.line)+'</p>':'')+
     (ctx.due?'<span class="due">'+esc(ctx.due)+'</span>':'')+'</div>'+
-    '<div class="dnav"><button class="circ" id="dp" aria-label="Previous day">‹</button><button class="circ" id="dn" aria-label="Next day">›</button></div></div>'+
+    '<div class="dnav"><button class="chip sm" id="'+(editing?"doneEdit":"editDay")+'" aria-pressed="'+editing+'">'+(editing?"Done":"✎ Edit")+'</button>'+
+    '<button class="circ" id="dp" aria-label="Previous day">‹</button><button class="circ" id="dn" aria-label="Next day">›</button></div></div>'+
     (ds!==t?'<button class="jump" id="dt">Back to today</button>':'');
 
   if(ds<settings.start){
-    h+='<p class="muted" style="margin-top:18px">This is before you started tracking, so this section stays pale green. You can move your start date on The plan tab.</p>';
+    h+='<p class="muted" style="margin-top:18px">This is before you started tracking, so this section stays pale green. You can move your start date in Settings.</p>';
   }
-  h+='<div class="score">'+scorePetal(fill,1)+'<div style="flex:1;min-width:0">'+
-    '<p class="tier">'+(future?"Still ahead":got?tier.name:(ds<t?"Gray — nothing checked":"Not started"))+'</p>'+
-    '<p class="pts">'+got+' of '+max+' points</p>'+
-    '<div class="meter"><i style="width:'+(p*100).toFixed(1)+'%"></i></div>'+
-    (future?'<p class="next">You can check items off once the day arrives.</p>':
-      (sc.priLeft&&got/max>=.9)?'<p class="next">Finish your '+(sc.priLeft===1?"last priority":sc.priLeft+" priorities")+' to reach full bloom</p>':
-      nextT&&need>0?'<p class="next">'+need+' more point'+(need===1?"":"s")+' to '+nextT.name.toLowerCase()+(sc.priLeft&&nextT.k==="full"?' — and finish your priorities':'')+'</p>':'<p class="next">Full bloom. Nice work.</p>')+
-    '</div></div>';
-
   var pris=its.filter(function(it){return it.pri});
   h+='<section class="pri" aria-labelledby="priH"><div class="prihead"><h3 id="priH">Priorities</h3><span class="hand muted">Must be done for a full-bloom day</span></div>';
   if(pris.length){
@@ -1251,35 +1495,33 @@ function renderDay(){
   }
   h+='<form class="priadd" id="priForm"><label for="priIn" class="sr">New priority</label><input id="priIn" maxlength="100" placeholder="Add a priority…" autocomplete="off"><button class="btn" type="submit">Add</button></form></section>';
 
-  var part="";
-  h+='<div>';
-  its.forEach(function(it){
-    if(it.pri)return;
-    if(it.part!==part){if(part)h+='</ul>';part=it.part;h+='<p class="group">'+part+'</p><ul class="items">'}
-    if(it.info){h+='<li class="info"><span class="t">'+fmtTime(it.t)+'</span><div class="it">'+esc(it.name)+'</div></li>';return}
-    var on=c.indexOf(it.id)>-1;
-    var ctl=editing
-      ? '<button class="edit" data-eid="'+it.id+'" aria-label="Edit '+esc(it.name)+'">✎</button>'
-      : '<button class="box" data-id="'+it.id+'" aria-pressed="'+on+'"'+(future?" disabled":"")+' aria-label="'+esc(it.name)+', '+it.pts+' point'+(it.pts>1?"s":"")+'"></button>';
-    var tag=it.custom?'<span class="custom-tag">'+(it.custom==="day"?"today only":"yours")+'</span>':'';
-    var pp='<span class="pp" aria-hidden="true">'+new Array(it.pts+1).join("<i></i>")+'</span>';
-    h+='<li class="'+(on?"on ":"")+(it.cat==="brk"?"brk":"")+'"><span class="t">'+fmtTime(it.t)+'</span>'+
-      ctl+
-      '<div class="it"><span class="nm">'+esc(it.name)+pp+tag+'</span>'+(it.sub?'<span class="sb">'+esc(it.sub)+' · '+it.dur+' min</span>':'<span class="sb">'+it.dur+' min</span>')+'</div></li>';
-  });
-  h+='</ul></div>';
-
   var dname=DOW[parse(ds).getDay()];
+  var tasks=its.filter(function(it){return !it.pri});
   if(editing){
-    h+='<div class="btnrow addrow"><button class="btn" id="addTask">+ Add a task</button><button class="btn ghost" id="doneEdit">Done editing</button></div>';
+    h+=timelineHTML(tasks,ds);
     var hid=hiddenItems(ds);
     if(hid.length){
       h+='<div class="hidden-list"><b>Removed</b><ul>'+hid.map(function(x){
         return '<li><span>'+esc(x.it.name)+' <span class="muted small">('+(x.scope==="day"?"this day":"every "+dname)+')</span></span>'+
           '<button class="linkbtn" data-restore="'+x.it.id+'" data-scope="'+x.scope+'">Restore</button></li>'}).join("")+'</ul></div>';
     }
+  }else if(!tasks.length){
+    h+='<div class="empty"><p>No tasks on this day yet, so today\u2019s color comes from your water drops.</p><button class="btn" id="startEdit">✎ Build this day</button>'+
+      (settings.builtin?'':'<p class="small muted">Or load the sample student plan in Settings.</p>')+'</div>';
   }else{
-    h+='<div class="dtools"><button class="chip" id="editDay">✎ Edit this day or routine</button></div>';
+    var part="";
+    h+='<div>';
+    tasks.forEach(function(it){
+      if(it.part!==part){if(part)h+='</ul>';part=it.part;h+='<p class="group">'+part+'</p><ul class="items">'}
+      if(it.info){h+='<li class="info"><span class="t">'+fmtTime(it.t)+'</span><div class="it">'+esc(it.name)+'</div></li>';return}
+      var on=c.indexOf(it.id)>-1;
+      var tag=it.custom==="day"?'<span class="custom-tag">today only</span>':'';
+      var pp='<span class="pp" aria-hidden="true">'+new Array(it.pts+1).join("<i></i>")+'</span>';
+      h+='<li class="'+(on?"on ":"")+(it.cat==="brk"?"brk":"")+'"><span class="t">'+fmtTime(it.t)+'</span>'+
+        '<button class="box" data-id="'+it.id+'" aria-pressed="'+on+'"'+(future?" disabled":"")+' aria-label="'+esc(it.name)+', '+it.pts+' point'+(it.pts>1?"s":"")+'"></button>'+
+        '<div class="it"><span class="nm">'+esc(it.name)+pp+tag+'</span>'+(it.sub?'<span class="sb">'+esc(it.sub)+' · '+it.dur+' min</span>':'<span class="sb">'+it.dur+' min</span>')+'</div></li>';
+    });
+    h+='</ul></div>';
   }
 
   var r0=rec(ds)||{};
@@ -1313,16 +1555,17 @@ function renderDay(){
     dayDs=b.getAttribute("data-mg");var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
     var dp=document.getElementById("dayPanel");if(dp)dp.scrollIntoView({behavior:"smooth",block:"start"});
   }});
-  var ed=document.getElementById("editDay");if(ed)ed.onclick=function(){editing=true;redraw("#addTask")};
+  var ed=document.getElementById("editDay");if(ed)ed.onclick=function(){editing=true;redraw("#doneEdit")};
+  var se=document.getElementById("startEdit");if(se)se.onclick=function(){editing=true;redraw("#doneEdit")};
   var de=document.getElementById("doneEdit");if(de)de.onclick=function(){editing=false;redraw("#editDay")};
-  var at=document.getElementById("addTask");if(at)at.onclick=function(){openTask(dayDs,null)};
+  el.querySelectorAll("[data-at]").forEach(function(b){b.onclick=function(){openTask(dayDs,null,+b.getAttribute("data-at"))}});
   el.querySelectorAll("[data-eid]").forEach(function(b){b.onclick=function(){openTask(dayDs,b.getAttribute("data-eid"))}});
   el.querySelectorAll("[data-restore]").forEach(function(b){
     b.onclick=function(){
       var id=b.getAttribute("data-restore"),dow=parse(dayDs).getDay();
       if(b.getAttribute("data-scope")==="day"){var x=dayx[dayDs];x.hide=x.hide.filter(function(i){return i!==id})}
       else routine.hide[dow]=(routine.hide[dow]||[]).filter(function(i){return i!==id});
-      rescore(dayDs);saveLocal();redraw("#addTask");
+      rescore(dayDs);saveLocal();redraw("#doneEdit");
     };
   });
   el.querySelectorAll("[data-mood]").forEach(function(b){
@@ -1351,9 +1594,12 @@ function renderPlan(){
     '<label for="ss">Started tracking</label><input type="date" id="ss" value="'+settings.start+'">'+
     '</div><button class="btn" id="sv">Save times</button> <span class="hand muted" id="svm"></span></div>'+
     '<div class="card"><h3>Your routine</h3>'+
-    '<p class="small muted">To add, change or remove tasks, open any day and tap <b>Edit this day or routine</b>. Changes can apply to one day, one weekday, weekdays, or every day.</p>'+
-    '<p class="small">'+routineSummary()+'</p>'+
-    '<div class="btnrow"><button class="btn ghost" id="rr">Reset routine to the original plan</button></div></div>'+
+    '<p class="small muted">To add, change or remove tasks, open any day and tap <b>✎ Edit</b>. Changes can apply to one day, one weekday, weekdays, or every day.</p>'+
+    '<p class="small">'+(settings.builtin?"You\u2019re using the sample student plan. ":"Your days are built from your own tasks. ")+routineSummary()+'</p>'+
+    '<div class="btnrow">'+(settings.builtin
+      ?'<button class="btn ghost" id="rr">Undo my changes to the sample plan</button><button class="btn ghost" id="rblank">Start with blank days</button>'
+      :'<button class="btn ghost" id="rr">Clear my routine</button><button class="btn ghost" id="rsample">Load the sample student plan</button>')+
+    '</div><p class="small muted" style="margin-top:8px">Already have a routine from another browser? Use <b>Restore from backup</b> below.</p></div>'+
     '<div class="card data" id="dataCard"><h3>Your data</h3>'+
     '<p class="small muted">Progress lives in this browser only. '+(settings.lastBackup?'Last backup: '+fmtShort(settings.lastBackup)+'.':'You haven\u2019t made a backup yet.')+'</p>'+
     '<div class="btnrow"><button class="btn" id="ex">Download backup</button><button class="btn ghost" id="im">Restore from backup</button></div>'+
@@ -1361,7 +1607,7 @@ function renderPlan(){
     '<h3 style="margin-top:18px">Export</h3>'+
     '<div class="btnrow"><button class="btn ghost" id="csv">Spreadsheet (.csv)</button></div>'+
     '<p class="small muted" style="margin-top:14px">Add upcoming tasks to your phone\u2019s calendar to get reminders.</p>'+
-    '<div class="fgrid"><label>Tasks<select id="icsWhat"><option value="key">Study &amp; workouts</option><option value="all">Everything</option></select></label>'+
+    '<div class="fgrid"><label>Tasks<select id="icsWhat"><option value="key">Learning &amp; workouts</option><option value="all">Everything</option></select></label>'+
     '<label>Days<select id="icsDays"><option>1</option><option selected>7</option><option>14</option></select></label></div>'+
     '<div class="btnrow"><button class="btn ghost" id="ics">Add to calendar (.ics)</button></div>'+
     '<p class="hand muted" id="bm" style="margin-top:8px" aria-live="polite"></p></div>';
@@ -1383,10 +1629,15 @@ function renderPlan(){
     download("year-in-bloom-"+today()+".ics",buildICS(document.getElementById("icsWhat").value,+document.getElementById("icsDays").value),"text/calendar");
     bm.textContent="Calendar file downloaded — open it to add the events";
   };
-  document.getElementById("rr").onclick=function(){
-    if(!confirm("Remove all your added, edited and removed tasks and go back to the original plan? Past days keep their colors."))return;
-    routine={add:{},hide:{},edit:{}};dayx={};rescore(today());saveLocal();renderPlan();
-  };
+  function resetRoutine(builtin,msg){
+    if(!confirm(msg))return;
+    routine={add:{},hide:{},edit:{}};
+    Object.keys(dayx).forEach(function(k){var p=dayx[k].pri;dayx[k]=p&&p.length?{pri:p}:{};});
+    settings.builtin=builtin;rescore(today());saveLocal();renderPlan();
+  }
+  document.getElementById("rr").onclick=function(){resetRoutine(settings.builtin,"Remove all your added, edited and removed tasks? Priorities and past colors stay.")};
+  var rb=document.getElementById("rblank");if(rb)rb.onclick=function(){resetRoutine(false,"Clear the sample plan and your changes so every day starts empty? Priorities and past colors stay.")};
+  var rs=document.getElementById("rsample");if(rs)rs.onclick=function(){resetRoutine(true,"Replace your routine with the sample student plan (study sprints, workouts, cooking and cleaning)? Priorities and past colors stay.")};
   document.getElementById("im").onclick=function(){document.getElementById("imf").click()};
   document.getElementById("imf").onchange=function(e){
     var f=e.target.files[0];if(!f)return;
@@ -1410,6 +1661,7 @@ function download(name,text,type){
   document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
 }
 function routineSummary(){
+  if(!settings.builtin){var c=0;for(var q in routine.add)c+=routine.add[q].length;return c?c+" weekly task"+(c===1?"":"s")+" saved (counted per weekday).":"No routine tasks yet.";}
   var n=0,e=0,r=0,k;
   for(k in routine.add)n+=routine.add[k].length;
   for(k in routine.edit)e+=Object.keys(routine.edit[k]).length;
@@ -1419,14 +1671,14 @@ function routineSummary(){
 }
 function csvCell(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
 function buildCSV(){
-  var rows=[["Date","Weekday","Score %","Color","Points earned","Points possible","Mood","Notes","Completed tasks"]];
+  var rows=[["Date","Weekday","Score %","Color","Points earned","Points possible","Water (glasses)","Mood","Notes","Completed tasks"]];
   var days=[];
   Object.keys(months).forEach(function(ym){Object.keys(months[ym]).forEach(function(d){days.push(ym+"-"+pad(+d))})});
   days.sort().forEach(function(ds){
     var r=rec(ds),its=items(ds),max=0,got=0,names=[];
     its.forEach(function(it){if(it.info)return;max+=it.pts;if(r.c.indexOf(it.id)>-1){got+=it.pts;names.push(it.name)}});
     var mood=MOODS.filter(function(m){return m[0]===r.mood})[0];
-    rows.push([ds,DOW[parse(ds).getDay()],Math.round((r.p||0)*100),tierOf(r.p||0).name,got,max,mood?mood[1]:"",r.note||"",names.join("; ")]);
+    rows.push([ds,DOW[parse(ds).getDay()],Math.round((r.p||0)*100),tierOf(r.p||0).name,got,max,r.w||0,mood?mood[1]:"",r.note||"",names.join("; ")]);
   });
   return "\ufeff"+rows.map(function(r){return r.map(csvCell).join(",")}).join("\r\n");
 }
@@ -1480,6 +1732,7 @@ function render(){
   renderHeader();
   if(view==="bouquet")renderBouquet();
   else if(view==="plan")renderPlan();
+  else if(view==="tips")renderTips();
 }
 function setView(v){
   view=v;
