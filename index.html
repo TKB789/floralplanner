@@ -262,7 +262,15 @@ fieldset legend{font-size:.88rem;color:var(--ink2);margin-bottom:6px}
 /* mood grid */
 .moodgrid{margin-top:30px;padding-top:18px;border-top:1.5px dashed var(--line)}
 .moodgrid h3{margin:0 0 2px}
-.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.mm{display:grid;grid-template-columns:30px repeat(31,1fr);gap:2px;align-items:center}
+.mml{font-family:var(--hand);font-size:.95rem;color:var(--ink2);line-height:1}
+.mmn{font-size:.58rem;color:var(--ink2);text-align:center;font-variant-numeric:tabular-nums;overflow:visible;white-space:nowrap}
+.mmy{grid-column:1/-1;font-family:var(--hand);font-size:.95rem;color:var(--ink2);margin-top:6px;border-top:1px dashed var(--line);padding-top:4px}
+.mmc{aspect-ratio:1/1.6;min-width:0;border:1px solid var(--line);border-radius:3px;background:var(--paper);padding:0;cursor:pointer}
+.mmc.fut{border-style:dashed}
+.mmc.tdy{border:1.5px solid var(--ink)}
+.mmc.sel{outline:2px solid var(--ink);outline-offset:1px}
+.mmx{aspect-ratio:1/1.6}
 .mgh{text-align:center;font-family:var(--hand);color:var(--ink2);font-size:.95rem}
 .mgc{aspect-ratio:1;border:1.5px solid var(--ink);border-radius:10px 8px 11px 9px;background:var(--paper);cursor:pointer;
   font-family:var(--disp);font-size:.85rem;padding:0;color:var(--ink)}
@@ -331,18 +339,21 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
 
   <nav role="tablist">
     <button role="tab" aria-selected="true" data-v="bouquet">Garden</button>
-    <button role="tab" aria-selected="false" data-v="plan">The plan</button>
-    <button role="tab" aria-selected="false" data-v="stats">Stats</button>
+    <button role="tab" aria-selected="false" data-v="plan">Settings</button>
     <button role="tab" aria-selected="false" data-v="tips">Tips</button>
   </nav>
 
   <section class="view on" id="v-bouquet"></section>
   <section class="view" id="v-plan"></section>
-  <section class="view" id="v-stats"></section>
 
   <section class="view" id="v-tips">
     <h2>Making time for everything</h2>
     <p class="muted">The schedule in this planner is built from these. Breaks are points, not slack — skipping them costs you color.</p>
+    <div class="card">
+      <h3>How a day gets its color</h3>
+      <p class="small">Every task is worth points: workouts 3, study sprints 2, priorities 2, and most other tasks 1. You can change any task's points when you edit it. A day's color comes from the share of points you earn:</p>
+      <p class="small"><b>Full bloom</b> 90%+ and every priority done · <b>In bloom</b> 75–89% · <b>Fading</b> 55–74% · <b>Wilting</b> 35–54% · <b>Wilted</b> 1–34% · <b>Gray</b> nothing checked.</p>
+    </div>
     <ol class="tips">
       <li><b>Work in short sprints with a real break after each.</b>Every study block here is 25 minutes, then 5 off. In one small experiment, people given a 5-minute break every 20 minutes got more done in two hours than when breaks were up to them — and they wandered off less on their own. <span class="src"><a href="https://pubmed.ncbi.nlm.nih.gov/37167429/" target="_blank" rel="noopener">PubMed, 2023</a></span></li>
       <li><b>Take a longer break about every hour and a half.</b>After three sprints you get 15 minutes away from the screen. MIT's Robert Pozen suggests roughly a 15-minute pause every 75–90 minutes, since focus tends to fade on about that cycle. <span class="src"><a href="https://www.work-fit.com/blog/how-effective-breaks-at-work-increase-productivity/" target="_blank" rel="noopener">Work-Fit</a></span></li>
@@ -1103,22 +1114,29 @@ function scorePetal(fill,op){
 var MOODS=[["normal","Normal","#8FB4E8"],["happy","Happy","#F2C94C"],["special","Special","#C9B6E4"],
   ["tired","Sick / tired","#9CCB6B"],["sad","Sad","#C4A57A"],["angry","Angry","#EE8FB0"]];
 function moodGrid(ds){
-  var ym=ymOf(ds),y=+ym.slice(0,4),m=+ym.slice(5)-1,n=daysIn(y,m),first=new Date(y,m,1).getDay(),t=today(),counts={};
-  var cells='';
-  ["S","M","T","W","T","F","S"].forEach(function(d){cells+='<span class="mgh" aria-hidden="true">'+d+'</span>'});
-  for(var i=0;i<first;i++)cells+='<span></span>';
-  for(var d=1;d<=n;d++){
-    var dd=ym+"-"+pad(d),r=rec(dd)||{},mo=MOODS.filter(function(x){return x[0]===r.mood})[0];
-    if(mo)counts[mo[0]]=(counts[mo[0]]||0)+1;
-    cells+='<button class="mgc'+(dd===t?" tdy":"")+(dd===ds?" sel":"")+(dd>t?" fut":"")+'" data-mg="'+dd+'"'+
-      (mo?' style="background:'+mo[2]+';color:#141414"':'')+
-      ' aria-label="'+fmtDay(dd)+(mo?": "+mo[1]:": no mood")+'">'+d+'</button>';
+  var t=today(),endYM=t.slice(0,7),ym=firstYM(),rows="",counts={},any=false;
+  if(ymOf(ds)>endYM&&ymOf(ds)>=ym)endYM=ymOf(ds);
+  var head='<span class="mml"></span>';
+  for(var d=1;d<=31;d++)head+='<span class="mmn">'+(d===1||d%5===0?d:"")+'</span>';
+  var lastYear=null;
+  while(ym<=endYM){
+    var y=+ym.slice(0,4),m=+ym.slice(5)-1,n=daysIn(y,m);
+    if(lastYear!==null&&y!==lastYear)rows+='<span class="mmy">'+y+'</span>';
+    lastYear=y;
+    rows+='<span class="mml">'+MONTHS[m].slice(0,3)+'</span>';
+    for(var dd=1;dd<=31;dd++){
+      if(dd>n){rows+='<span class="mmx"></span>';continue}
+      var dstr=ym+"-"+pad(dd),r=rec(dstr)||{},mo=MOODS.filter(function(x){return x[0]===r.mood})[0];
+      if(mo){counts[mo[0]]=(counts[mo[0]]||0)+1;any=true}
+      rows+='<button class="mmc'+(dstr>t?" fut":"")+(dstr===t?" tdy":"")+(dstr===ds?" sel":"")+'" data-mg="'+dstr+'"'+
+        (mo?' style="background:'+mo[2]+'"':'')+' aria-label="'+fmtDay(dstr)+(mo?": "+mo[1]:"")+'"></button>';
+    }
+    ym=addMonths(ym,1);
   }
-  var total=Object.keys(counts).reduce(function(a,k){return a+counts[k]},0);
   var leg=MOODS.map(function(x){return '<span><i style="background:'+x[2]+'"></i>'+x[1]+(counts[x[0]]?' · '+counts[x[0]]:'')+'</span>'}).join("");
-  return '<section class="moodgrid" aria-labelledby="mgH"><h3 id="mgH">'+MONTHS[m]+' moods</h3>'+
-    '<p class="small muted" style="margin:0 0 8px">'+(total?total+" of "+n+" days tracked. Tap a day to open it.":"Pick a mood above and your month fills in here.")+'</p>'+
-    '<div class="mg">'+cells+'</div><div class="mglegend">'+leg+'</div></section>';
+  return '<section class="moodgrid" aria-labelledby="mgH"><h3 id="mgH">Your moods</h3>'+
+    '<p class="small muted" style="margin:0 0 10px">'+(any?"One row per month, one square per day. Tap a square to open that day.":"Pick a mood above and each month fills in as a row here.")+'</p>'+
+    '<div class="mm">'+head+rows+'</div><div class="mglegend">'+leg+'</div></section>';
 }
 function setMeta(ds,obj){
   var ym=ymOf(ds),d=String(+ds.slice(8));
@@ -1324,46 +1342,7 @@ function renderDay(){
 
 function renderPlan(){
   var el=document.getElementById("v-plan");
-  var sample="2026-09-21",mx=maxPts(sample);
-  var rows=[
-    ["Mon","Lift","3 + morning","Bathroom wipe-down"],
-    ["Tue","Walk","3 + morning","Laundry"],
-    ["Wed","Lift","2 + morning · submit HW","Vacuum one room"],
-    ["Thu","Walk","2 + morning · new HW opens","Grocery list"],
-    ["Fri","Lift","2 + morning","Tidy for the weekend"],
-    ["Sat","Walk","4 · quiz days swap in","Groceries, laundry"],
-    ["Sun","Rest","3 · peer reviews first","Meal prep, weekly reset"]
-  ];
-  var h='<h2>How your week runs</h2>'+
-    '<p class="muted">Built around ISYE 6501: homework is due Wednesdays at 11 pm Pacific, peer reviews on Sundays, and new lectures drop Saturdays. Workouts match your training planner.</p>'+
-    '<div class="tw"><table><thead><tr><th>Day</th><th>Move</th><th>Study sprints</th><th>Chores</th></tr></thead><tbody>'+
-    rows.map(function(r){return '<tr><td>'+r.join("</td><td>")+'</td></tr>'}).join("")+'</tbody></table></div>'+
-    '<p class="small muted" style="margin-top:10px">Every sprint is 25 minutes, followed by a 5-minute break. After the last sprint comes a 15-minute break. Weekday evenings finish around 8:40 pm.</p>';
-
-  h+='<h3>How a day gets its color</h3>'+
-    '<p>Each item is worth points by how much it matters. A day\u2019s color comes from the share of points you earn, so skipping one small thing never wilts a day.</p>'+
-    '<div class="tw"><table><thead><tr><th>Item</th><th>Points</th><th>Why</th></tr></thead><tbody>'+
-    '<tr><td>Workout</td><td>3</td><td>One session, and the hardest to reschedule</td></tr>'+
-    '<tr><td>Study sprint</td><td>2 each</td><td>Deadlines and grades ride on these</td></tr>'+
-    '<tr><td>Quiz · meal prep · weekly reset</td><td>4 · 2 · 2</td><td>Bigger blocks earn more</td></tr>'+
-    '<tr><td>Cooking, cleaning, planning</td><td>1 each</td><td>Short, but they keep the week running</td></tr>'+
-    '<tr><td>Breaks</td><td>1 each</td><td>Rest is part of the plan, so it scores</td></tr>'+
-    '</tbody></table></div>'+
-    '<ul class="tiers">'+TIERS.map(function(tr){
-      var f=tr.k==="gray"?"#A2A29B":tr.k==="wilted"?"linear-gradient(90deg,#6E4B2E 0 33%,#58391F 33% 66%,#4E3524 66%)":tr.k==="wilting"?"linear-gradient(90deg,#C69A6B 0 33%,#B98552 33% 66%,#A8703F 66%)":tierFill(tr.k,paletteFor(today().slice(0,7))[0]);
-      var range=tr.k==="gray"?"0%":tr.k==="wilted"?"1–34%":Math.round(tr.min*100)+"%"+(tr.k==="full"?"+":"–"+(Math.round(TIERS[TIERS.indexOf(tr)-1].min*100)-1)+"%");
-      var ptsNeeded=tr.k==="gray"?"0 points":tr.k==="wilted"?"1+ points":Math.ceil(tr.min*mx-1e-9)+"+ points";
-      return '<li><i class="sw" style="background:'+f+'"></i><div><b>'+tr.name+'</b> · '+range+'<br><span class="small muted">'+tr.note+'. On a '+mx+'-point Monday: '+ptsNeeded+'.</span></div></li>';
-    }).join("")+'</ul>';
-
-  var ev=[];
-  for(var n=1;n<=14;n++){ev.push([hwDue(n),"HW "+n+" due"]);ev.push([addDays(hwDue(n),4),"Peer reviews for HW "+n+" due"])}
-  QUIZ.forEach(function(q){ev.push([q.open,q.name+" opens"]);ev.push([q.close,q.name+" closes"])});
-  ev.push([PROJECT.due,"Course project due"]);ev.push([addDays(PROJECT.due,4),"Project peer reviews due"]);
-  var t=today();
-  ev=ev.filter(function(e){return e[0]>=t}).sort(function(a,b){return a[0]<b[0]?-1:1}).slice(0,6);
-  h+='<h3>Coming up</h3>'+(ev.length?'<ul class="dl">'+ev.map(function(e){return '<li><span>'+e[1]+'</span><span class="d">'+fmtShort(e[0])+', 11 pm PT</span></li>'}).join("")+'</ul>':'<p class="muted">No course deadlines left.</p>');
-
+  var h='<h2>Settings</h2>';
   h+='<div class="card"><h3>Fit it to your day</h3>'+
     '<p class="small muted">Times shift everything else. Changing these never changes past days.</p>'+
     '<div class="form">'+
@@ -1372,7 +1351,7 @@ function renderPlan(){
     '<label for="ss">Started tracking</label><input type="date" id="ss" value="'+settings.start+'">'+
     '</div><button class="btn" id="sv">Save times</button> <span class="hand muted" id="svm"></span></div>'+
     '<div class="card"><h3>Your routine</h3>'+
-    '<p class="small muted">To add, change or remove tasks, open any day in the Garden and tap <b>Edit this day or routine</b>. Changes can apply to one day, one weekday, weekdays, or every day.</p>'+
+    '<p class="small muted">To add, change or remove tasks, open any day and tap <b>Edit this day or routine</b>. Changes can apply to one day, one weekday, weekdays, or every day.</p>'+
     '<p class="small">'+routineSummary()+'</p>'+
     '<div class="btnrow"><button class="btn ghost" id="rr">Reset routine to the original plan</button></div></div>'+
     '<div class="card data" id="dataCard"><h3>Your data</h3>'+
@@ -1471,57 +1450,6 @@ function buildICS(what,n){
   return L.join("\r\n")+"\r\n";
 }
 
-/* ---------- stats ---------- */
-function renderStats(){
-  var el=document.getElementById("v-stats"),t=today(),ym=t.slice(0,7);
-  function good(ds){var r=rec(ds);return r&&r.p>=.75}
-  // streaks (today counts only once it reaches 75%)
-  var cur=0,d=good(t)?t:addDays(t,-1);
-  while(d>=settings.start&&good(d)){cur++;d=addDays(d,-1)}
-  var best=0,run=0;
-  for(d=settings.start;d<=t;d=addDays(d,1)){if(good(d)){run++;best=Math.max(best,run)}else run=0}
-  // this month
-  var y=+ym.slice(0,4),m=+ym.slice(5)-1,sum=0,cnt=0,fullN=0,grayN=0,cats={},moods={};
-  for(var i=1;i<=daysIn(y,m);i++){
-    var ds=ym+"-"+pad(i);if(ds>t||ds<settings.start)continue;
-    var r=rec(ds)||{c:[],p:0};
-    if(ds<t||r.p>0){sum+=r.p||0;cnt++;if(r.p>=.9)fullN++;if(!r.p&&ds<t)grayN++}
-    if(r.mood)moods[r.mood]=(moods[r.mood]||0)+1;
-    items(ds).forEach(function(it){if(it.info)return;var c=cats[it.cat]=cats[it.cat]||[0,0];c[1]+=it.pts;if(r.c.indexOf(it.id)>-1)c[0]+=it.pts});
-  }
-  var avg=cnt?Math.round(sum/cnt*100):0;
-  var h='<h2>'+MONTHS[m]+' at a glance</h2>'+
-    '<div class="kpis">'+
-    '<div class="kpi"><b>'+cur+'</b><span>day streak at 75%+</span></div>'+
-    '<div class="kpi"><b>'+best+'</b><span>best streak</span></div>'+
-    '<div class="kpi"><b>'+avg+'%</b><span>average this month</span></div>'+
-    '<div class="kpi"><b>'+fullN+'</b><span>full-bloom days · '+grayN+' gray</span></div></div>';
-  h+='<h3>Where your points went</h3><ul class="bars">'+Object.keys(CAT_NAMES).filter(function(k){return cats[k]}).map(function(k){
-    var pc=Math.round(cats[k][0]/cats[k][1]*100);
-    return '<li><span>'+CAT_NAMES[k]+'</span><span class="bar"><i style="width:'+pc+'%"></i></span><span>'+pc+'%</span></li>'}).join("")+'</ul>'+
-    '<p class="small muted">Share of each type\u2019s points you earned this month. The lowest bar is where a small change helps most.</p>';
-  var mk=Object.keys(moods);
-  h+='<h3>Mood this month</h3>'+(mk.length?'<div class="moods">'+MOODS.filter(function(x){return moods[x[0]]}).map(function(x){
-    return '<span class="chip" style="cursor:default"><i style="background:'+x[2]+'"></i>'+x[1]+' · '+moods[x[0]]+'</span>'}).join("")+'</div>'
-    :'<p class="muted small">Pick a mood under any day\u2019s list to see it here.</p>');
-  // 12-week heatmap
-  var end=addDays(t,6-parse(t).getDay()),start=addDays(end,-83);
-  h+='<h3>Last 12 weeks</h3><div class="heat" role="img" aria-label="Daily colors for the last 12 weeks">';
-  for(var row=0;row<7;row++){
-    h+='<span>'+DOW[row].slice(0,3)+'</span>';
-    for(var w=0;w<12;w++){
-      var dd=addDays(start,w*7+row),st=dayState(dd),bg;
-      if(st.kind==="future")bg="var(--paper)";
-      else if(st.kind==="pre")bg="var(--pre)";
-      else if(st.kind==="today"&&!st.p)bg="var(--paper)";
-      else bg=st.tier.k==="gray"?"#A2A29B":st.tier.k==="wilted"?"#58391F":st.tier.k==="wilting"?"#B98552":tierFill(st.tier.k,hueFor(dd),dd);
-      h+='<i title="'+fmtShort(dd)+'" style="background:'+bg+'"></i>';
-    }
-  }
-  h+='</div>';
-  el.innerHTML=h;
-}
-
 /* ---------- theme ---------- */
 function applyTheme(){
   var th=settings.theme||"auto",root=document.documentElement;
@@ -1552,7 +1480,6 @@ function render(){
   renderHeader();
   if(view==="bouquet")renderBouquet();
   else if(view==="plan")renderPlan();
-  else if(view==="stats")renderStats();
 }
 function setView(v){
   view=v;
