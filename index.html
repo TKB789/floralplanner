@@ -218,7 +218,13 @@ textarea{width:100%;min-height:90px;margin-top:8px;font-family:var(--disp);font-
 dialog{border:1.5px solid var(--ink);border-radius:20px;background:var(--paper);color:var(--ink);padding:20px;width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
 dialog::backdrop{background:rgba(0,0,0,.45)}
 dialog h3{margin:0 0 10px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 12px}
+.fgrid label{min-width:0}
+.fgrid input[type="time"],.fgrid input[type="date"],.form input[type="time"],.form input[type="date"]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;box-sizing:border-box;min-height:42px;text-align:left}
+input[type="time"]::-webkit-date-and-time-value,input[type="date"]::-webkit-date-and-time-value{text-align:left}
+.cats label{padding:5px 12px}
+.fgrid input,.fgrid select{height:44px;box-sizing:border-box;line-height:1.2}
+.radios label:has(input:checked){background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .fgrid label{display:flex;flex-direction:column;gap:4px;font-size:.88rem;color:var(--ink2)}
 .fgrid .full{grid-column:1/-1}
 .fgrid input,.fgrid select,.data select{font-family:var(--disp);font-size:1rem;padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);min-width:0;width:100%}
@@ -339,6 +345,11 @@ ul.items .box[aria-pressed="true"]::after{left:8px;top:3px}
 .tladd{width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--ink2);background:none;color:var(--ink2);cursor:pointer;font-size:1.05rem;line-height:1;margin-top:2px}
 .tl li.free .tladd{border-style:solid;border-color:var(--ink);color:var(--ink)}
 /* bullet-journal tips */
+.catlist{list-style:none;margin:6px 0 10px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.catlist li{border-top:1.5px dashed var(--line);padding-top:6px}
+.catlist h4{margin:0;font-family:var(--hand);font-weight:400;font-size:1.12rem;line-height:1.2}
+.catlist p{margin:2px 0 4px;font-size:.8rem !important;line-height:1.4;color:var(--ink2)}
+.src-tag{display:inline-block;font-size:.66rem;letter-spacing:.02em;text-transform:uppercase;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--ink2);line-height:1.5}
 .spread{text-align:center;margin:4px 0 18px}
 .spread h2{font-size:1.9rem;margin:0;text-shadow:2px 2px 0 var(--paper),3px 3px 0 var(--ink)}
 .spread p{margin:2px 0 0;font-size:1.1rem}
@@ -464,24 +475,30 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
         <div id="tipLegend"></div>
       </div>
 
-      <div class="blk b2">
+      <div class="blk span2 b2">
         <span class="tape t2">Full bloom needs</span>
         <ul class="ticks">
-          <li><i></i>90%+ of the day's points</li>
+          <li><i></i>Most of your day done (90% or more)</li>
           <li><i></i>Every priority checked</li>
           <li><i></i>At least 1 water drop</li>
         </ul>
       </div>
 
-      <div class="blk b3">
-        <span class="tape t3">Points</span>
-        <ul class="ptiles">
-          <li><b>3</b>Workout</li>
-          <li><b>2</b>Learn</li>
-          <li><b>2</b>Priority</li>
-          <li><b>1</b>Regular &amp; others</li>
+      <div class="blk span2 b3">
+        <span class="tape t3">Categories</span>
+        <p>The categories come from two well-known wellbeing frameworks: the <b>six pillars of lifestyle medicine</b> (eating well, moving, restorative sleep, managing stress, social connection, and avoiding risky substances) and the <b>Five Ways to Wellbeing</b> (connect, be active, take notice, keep learning, give). Each one is a small daily habit worth building.</p>
+        <ul class="catlist">
+          <li><h4>Workout</h4><p>Regular movement supports mood, energy and sleep. Any activity you enjoy counts.</p><span class="src-tag">Be active · Physical activity</span></li>
+          <li><h4>Cooking</h4><p>Making your own meals makes eating well the easy choice.</p><span class="src-tag">Nutrition</span></li>
+          <li><h4>Break / rest</h4><p>Pauses, wind-downs and screen-free time help manage stress and protect sleep.</p><span class="src-tag">Take notice · Sleep &amp; stress</span></li>
+          <li><h4>Learn</h4><p>Picking up something new keeps your mind active, and adult learning is linked with fewer symptoms of anxiety and depression.</p><span class="src-tag">Keep learning</span></li>
+          <li><h4>Connect</h4><p>A call, a meal together, or a kind message. Relationships are a core part of health in both frameworks.</p><span class="src-tag">Connect · Give · Social connection</span></li>
+          <li><h4>Cleaning</h4><p>People who describe their homes as cluttered tend to report more stress, so small daily resets help.</p><span class="src-tag">Stress</span></li>
+          <li><h4>Planning</h4><p>A few minutes of planning keeps your priorities in view.</p><span class="src-tag">Take notice</span></li>
+          <li><h4>Regular</h4><p>Everything else: work, errands, appointments. It's the default if you're not sure.</p></li>
         </ul>
-        <p class="fine">Change any task's points when you edit it.</p>
+        <p class="fine">Workouts and learning count a little more toward a day's color, since they take the most effort.</p>
+        <p class="fine">Sources: <a href="https://lifestylemedicine.org/pillar-updates-stress-management-and-social-connection/" target="_blank" rel="noopener">American College of Lifestyle Medicine</a> · <a href="https://neweconomics.org/uploads/files/NEF-5ways.pdf" target="_blank" rel="noopener">New Economics Foundation</a> · <a href="https://thethrivelab.com/benefits-of-adult-learning-and-impact-on-wellbeing/" target="_blank" rel="noopener">The Thrive Lab</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/19934011/" target="_blank" rel="noopener">Saxbe &amp; Repetti, 2010</a></p>
       </div>
 
       <div class="blk span2 b4">
@@ -536,16 +553,25 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
       <h3 id="dlgT">Add a task</h3>
       <div class="fgrid">
         <label class="full">Task<input id="fName" required maxlength="80" autocomplete="off"></label>
-        <label class="full">Note (optional)<input id="fSub" maxlength="120" autocomplete="off"></label>
+      </div>
+      <fieldset><legend>Category</legend><div class="radios cats" id="fCat">
+        <label><input type="radio" name="cat" value="other" checked>Regular</label>
+        <label><input type="radio" name="cat" value="study">Learn</label>
+        <label><input type="radio" name="cat" value="move">Workout</label>
+        <label><input type="radio" name="cat" value="connect">Connect</label>
+        <label><input type="radio" name="cat" value="cook">Cooking</label>
+        <label><input type="radio" name="cat" value="clean">Cleaning</label>
+        <label><input type="radio" name="cat" value="brk">Break / rest</label>
+        <label><input type="radio" name="cat" value="plan">Planning</label>
+      </div></fieldset>
+      <div class="fgrid" style="margin-top:14px">
         <label>Start<input id="fTime" type="time" required></label>
-        <label>Minutes<input id="fDur" type="number" min="5" max="600" step="5" required></label>
-        <label>Type<select id="fCat">
-          <option value="other">Regular task</option><option value="study">Learn</option><option value="move">Workout</option><option value="cook">Cooking</option>
-          <option value="clean">Cleaning</option><option value="brk">Break / rest</option><option value="plan">Planning</option>
-</select></label>
-        <label>Points<select id="fPts"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+        <label>Minutes<input id="fDur" type="number" inputmode="numeric" min="5" max="600" step="5" required></label>
       </div>
       <fieldset><legend>Apply to</legend><div class="radios" id="fScope"></div></fieldset>
+      <div class="fgrid" style="margin-top:14px">
+        <label class="full">Note (optional)<input id="fSub" maxlength="120" autocomplete="off"></label>
+      </div>
       <div class="dact">
         <button type="button" class="btn danger" id="fDel">Remove</button>
         <span style="display:flex;gap:8px;margin-left:auto">
@@ -789,8 +815,8 @@ function baseItems(ds){
   return out;
 }
 
-PTS.other=1;PTS.pri=2;
-var CAT_NAMES={pri:"Priorities",study:"Learn",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",plan:"Planning",other:"Regular"};
+PTS.other=1;PTS.pri=2;PTS.connect=1;
+var CAT_NAMES={pri:"Priorities",study:"Learn",move:"Workout",cook:"Cooking",clean:"Cleaning",brk:"Breaks",connect:"Connect",plan:"Planning",other:"Regular"};
 function partFor(t){return t<720?"Morning":(t<toMin(settings.free)?"Daytime":"Evening")}
 function items(ds){
   var dow=parse(ds).getDay(),x=dayx[ds]||{},list=settings.builtin?baseItems(ds):[];
@@ -915,7 +941,74 @@ var YEAR1=[ // hand-picked designs for the first year
 function monthIndex(ym){var s=yearStart(),p=ym.split("-");return (+p[0]-s.y)*12+(+p[1]-1-s.m)}
 function yearIdxOf(ym){return Math.floor(monthIndex(ym)/12)}
 
+/* Find the largest number that fits fully inside a petal section.
+   Text runs along the radius, so it needs: length along the radius, and width across the section. */
+function placeNum(D,R,us,ue,digits,fsMax,fsMin){
+  var r0=R*D.r0,L=R-r0,a=D.w*180/D.P*Math.PI/180,cr=r0*1.2+R*.02,um=(us+ue)/2,span=(ue-us)*a;
+  function edge(u){u=Math.max(-1,Math.min(1,u));return r0+L*shapeFn(D,u)}
+  for(var fs=fsMax;fs>=fsMin-1e-9;fs-=.25){
+    var Lt=fs*(.6*digits+.15),Wt=fs*.95,r=edge(um)-Lt/2;
+    for(var it=0;it<3;it++){
+      var inner=Math.max(r-Lt/2,1e-3),du=(Wt/2)/inner/a,mn=Infinity;
+      for(var q=-4;q<=4;q++)mn=Math.min(mn,edge(um+du*q/4));
+      r=mn-fs*.45-Lt/2;
+    }
+    var rin=r-Lt/2;
+    if(rin<cr)continue;
+    if(rin*span<Wt*1.4)continue;       // section must be wider than the digits at their narrowest point
+    return {r:r,fs:fs};
+  }
+  return null;
+}
+/* Split a petal into k sections of equal area, so edge sections aren't thin slivers. */
+var boundsMemo={};
+function sectionBounds(D,k){
+  var key=[D.fam,D.P,D.w,D.r0,D.e,D.q,D.d,D.s,D.f,D.amp,k].join("|");
+  if(boundsMemo[key])return boundsMemo[key];
+  var N=240,cum=[0],tot=0,i;
+  for(i=0;i<N;i++){
+    var u=-1+2*(i+.5)/N,e=D.r0+(1-D.r0)*shapeFn(D,u);
+    tot+=e*e-D.r0*D.r0;cum.push(tot);
+  }
+  var b=[-1],j=1;
+  for(i=1;i<=N&&j<k;i++){
+    while(j<k&&cum[i]>=tot*j/k){
+      var f=(tot*j/k-cum[i-1])/Math.max(1e-9,cum[i]-cum[i-1]);
+      b.push(-1+2*(i-1+f)/N);j++;
+    }
+  }
+  b.push(1);
+  return (boundsMemo[key]=b);
+}
+function designFits(D,n,R,fsMin){
+  var base=Math.floor(n/D.P),extra=n%D.P,day=0;
+  for(var p=0;p<D.P;p++){
+    var k=base+(p<extra?1:0);
+    var bb=sectionBounds(D,k);
+    for(var j=0;j<k;j++){day++;
+      if(!placeNum(D,R,bb[j],bb[j+1],day<10?1:2,9*(R/80)*.95,fsMin))return false;
+    }
+  }
+  return true;
+}
+function widenToFit(d){
+  // Make sure every day number fits in the large Month view; widen or simplify petals until it does.
+  for(var i=0;i<30&&!designFits(d,31,160,8.5);i++){
+    if(d.w<.97)d.w=Math.min(.97,d.w+.05);
+    else if(d.fam==="spike"){d.fam="point";d.q=1.05;d.e=.72}
+    else if(d.fam==="flame"||d.fam==="point"||d.fam==="cleft"){d.fam="round";d.e=.45}
+    else if(d.r0>.14)d.r0-=.02;
+    else if(d.P>5)d.P--;
+    else break;
+  }
+  return d;
+}
+var designMemo={};
 function designFor(ym){
+  if(designMemo[ym])return designMemo[ym];
+  return (designMemo[ym]=widenToFit(designForRaw(ym)));
+}
+function designForRaw(ym){
   var r=rng(hashStr("design"+ym)),mi=monthIndex(ym),d;
   if(mi>=0&&mi<12){d=Object.assign({},YEAR1[mi]);d.center=CENTERS[mi%4]}
   else{
@@ -923,7 +1016,6 @@ function designFor(ym){
     var Ps=[4,5,5,6,6,7,8,8,9,10,11,12,13,14];
     d={P:Ps[Math.floor(r()*Ps.length)],fam:fam,w:.74+r()*.23,r0:.15+r()*.09,e:.3+r()*.4,q:1+r()*.35,
        d:.1+r()*.16,s:.12+r()*.12,f:2+Math.floor(r()*3),amp:.05+r()*.06,center:CENTERS[Math.floor(r()*4)]};
-    if(d.fam==="spike"||d.fam==="flame")d.w=Math.min(d.w,.85);
   }
   d.rot=Math.floor(r()*360);
   return d;
@@ -961,7 +1053,7 @@ var FLORA=[
   ["Camellia","pink",["#E4577E","#EC7A99","#CC3E66","#F29AB2"],"Raspberry"]
 ];
 // First tracking year follows the seasons
-var YEAR1_FLORA=["Lilac","Marigold","Iris","Red poppy","Cornflower","Peony","Turquoise","Forget-me-not","Coral zinnia","Hibiscus","Orange-red","Orchid"];
+var YEAR1_FLORA=["Lilac","Marigold","Iris","Red poppy","Cornflower","Peony","Orange-red","Forget-me-not","Coral zinnia","Hibiscus","Turquoise","Orchid"];
 function floraByName(n){for(var i=0;i<FLORA.length;i++)if(FLORA[i][0]===n)return FLORA[i];return FLORA[0]}
 var GROUP={red:"warm",coral:"warm",orange:"warm",orangered:"warm",turquoise:"sea",pink:"rose",magenta:"rose",purple:"cool",violet:"cool",blue:"cool",sky:"cool"};
 var floraMemo={};
@@ -1013,11 +1105,15 @@ function flower(y,m,R,D){
   function pt(phi,u,r){var th=(phi+u*a)*Math.PI/180;return f1(r*Math.sin(th))+" "+f1(-r*Math.cos(th))}
   function edge(u){return r0+L*shapeFn(D,u)}
   var base=Math.floor(n/P),extra=n%P,day=0,s="",outlines="",selG="";
+  // one font size for the whole flower: the largest size that fits in every section
+  var fsU=9*ks*.95,dd=0;
+  if(R>=100)for(var p0=0;p0<P;p0++){var k0=base+(p0<extra?1:0),b0=sectionBounds(D,k0);
+    for(var j0=0;j0<k0;j0++){dd++;var pl0=placeNum(D,R,b0[j0],b0[j0+1],dd<10?1:2,fsU,R>=100?5:3.6);if(pl0)fsU=Math.min(fsU,pl0.fs)}}
   for(var p=0;p<P;p++){
-    var phi=rot+p*360/P,k=base+(p<extra?1:0);
+    var phi=rot+p*360/P,k=base+(p<extra?1:0),bnd=sectionBounds(D,k);
     for(var j=0;j<k;j++){
       day++;
-      var us=-1+2*j/k,ue=-1+2*(j+1)/k,ds=ymS+"-"+pad(day),st=dayState(ds);
+      var us=bnd[j],ue=bnd[j+1],ds=ymS+"-"+pad(day),st=dayState(ds);
       var steps=Math.max(3,Math.ceil(28/k)),d="M"+pt(phi,us,r0);
       for(var q=0;q<=steps;q++){var u=us+(ue-us)*q/steps;d+=" L"+pt(phi,u,edge(u))}
       d+=" L"+pt(phi,ue,r0)+"Z";
@@ -1028,9 +1124,10 @@ function flower(y,m,R,D){
       var isSel=(ds===dayDs),isToday=(ds===t);
       var body='<path d="'+d+'" class="ink'+(cls?" "+cls:"")+'"'+(fill?' style="fill:'+fill+'"'+op:"")+
         ' stroke-width="'+(isSel?2.6*ks:isToday?1.9*ks:sw*.55)+'" stroke-linejoin="round"/>';
-      if(st.kind==="future"||st.kind==="today"){
-        var um=(us+ue)/2,len=edge(um)-r0,rm=r0+len*.7,wid=rm*(ue-us)*a*Math.PI/180,fs=Math.min(9*ks*.95,wid*1.2,len*.34);
-        if(fs>=4.2){
+      if(R>=100&&(st.kind==="future"||st.kind==="today")){
+        var um=(us+ue)/2,pl=placeNum(D,R,us,ue,day<10?1:2,fsU,R>=100?5:3.6);
+        if(pl){
+          var rm=pl.r,fs=pl.fs;
           var deg=(((phi+um*a)%360)+360)%360,th=deg*Math.PI/180,rt=deg>180?deg+90:deg-90;
           var tx=f1(rm*Math.sin(th)),ty=f1(-rm*Math.cos(th));
           body+='<text class="num" x="'+tx+'" y="'+ty+'" font-size="'+f1(fs)+'" transform="rotate('+f1(rt)+' '+tx+' '+ty+')">'+day+'</text>';
@@ -1389,8 +1486,8 @@ function openTask(ds,id,at){
   document.getElementById("fSub").value=it?(it.sub||""):"";
   document.getElementById("fTime").value=hhmm(it?it.t:(at!=null?at:toMin(settings.free)+60));
   document.getElementById("fDur").value=it?it.dur:25;
-  document.getElementById("fCat").value=it?(CAT_NAMES[it.cat]&&it.cat!=="pri"?it.cat:"other"):"other";
-  document.getElementById("fPts").value=String(it?it.pts:1);
+  var cv=it&&CAT_NAMES[it.cat]&&it.cat!=="pri"?it.cat:"other";
+  document.querySelectorAll('#fCat input').forEach(function(r){r.checked=r.value===cv});
   var scopes=it
     ? [["day","Just "+fmtShort(ds)],["week","Every "+dn]]
     : [["day","Just "+fmtShort(ds)],["week","Every "+dn],["weekdays","Weekdays"],["all","Every day"]];
@@ -1407,7 +1504,8 @@ function saveTask(){
   var S=dlgState;if(!S)return;
   var name=document.getElementById("fName").value.trim();if(!name)return;
   var data={name:name,sub:document.getElementById("fSub").value.trim(),t:toMin(document.getElementById("fTime").value),
-    dur:Math.max(5,+document.getElementById("fDur").value||25),cat:document.getElementById("fCat").value,pts:+document.getElementById("fPts").value||1};
+    dur:Math.max(5,+document.getElementById("fDur").value||25),cat:(document.querySelector('#fCat input:checked')||{}).value||"other"};
+  data.pts=PTS[data.cat]||1;
   var scope=(document.querySelector('#fScope input:checked')||{}).value||"day",dow=parse(S.ds).getDay();
   var x=dayx[S.ds]=dayx[S.ds]||{};
   if(!S.it){
@@ -1614,7 +1712,7 @@ function renderPlan(){
   el.innerHTML=h;
   document.getElementById("sv").onclick=function(){
     var w=document.getElementById("sw").value,f=document.getElementById("sf").value,s=document.getElementById("ss").value;
-    if(w)settings.wake=w;if(f)settings.free=f;if(s){settings.start=s;layoutCache={};floraMemo={}}
+    if(w)settings.wake=w;if(f)settings.free=f;if(s){settings.start=s;layoutCache={};floraMemo={};designMemo={}}
     saveSettings();renderHeader();
     document.getElementById("svm").textContent="Saved";
   };
@@ -1647,7 +1745,7 @@ function renderPlan(){
         var o=JSON.parse(r.result);
         if(!o||o.app!=="year-in-bloom"||!o.months)throw 0;
         if(!confirm("Replace the progress in this browser with this backup?"))return;
-        applyData(o);layoutCache={};floraMemo={};saveLocal();applyTheme();render();
+        applyData(o);layoutCache={};floraMemo={};designMemo={};saveLocal();applyTheme();render();
         document.getElementById("bm").textContent="Backup restored";
       }catch(err){bm.textContent="That file isn't a Year in bloom backup. Choose the .json file you downloaded."}
     };
@@ -1721,7 +1819,6 @@ document.getElementById("dlgForm").addEventListener("submit",function(e){e.preve
 document.getElementById("fCancel").onclick=closeTask;
 document.getElementById("fDel").onclick=deleteTask;
 document.getElementById("dlg").addEventListener("close",function(){dlgState=null});
-document.getElementById("fCat").onchange=function(){document.getElementById("fPts").value=String(PTS[this.value]||1)};
 
 function renderHeader(){
   var yi=currentYearIdx(),ms=yearMonthsFor(yi),a=ms[0],b=ms[11];
