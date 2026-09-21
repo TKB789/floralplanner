@@ -399,7 +399,63 @@ ul.items .box[aria-pressed="true"]::after{left:8px;top:3px}
 .tcards p{margin:2px 0 0;font-size:.8rem;line-height:1.4;color:var(--ink2)}
 footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink2);font-size:1rem}
 
+
+/* ---- v2: due pill, day header, compact priorities ---- */
+.due{margin-top:0;padding:1px 11px;border:1.5px solid var(--ink);background:#FFE58A;color:#141414;
+  box-shadow:2px 2px 0 var(--ink);transform:rotate(-1.2deg);font-size:1rem;line-height:1.5}
+.due.now{background:#FFB547;font-weight:700}
+.due.now::before{content:"";display:inline-block;width:.5em;height:.5em;border-radius:50%;background:#C2410C;margin-right:6px;vertical-align:1px}
+.dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dmid{flex:1;min-width:0;text-align:center}
+.dmid h2{margin:0}
+.dmid .ctx{margin:2px 0 0;font-size:1rem;line-height:1.3}
+.dtags{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;margin-top:8px}
+.dtags .jump{margin-top:0}
+.pri{margin:12px 0 0;padding:8px 12px 10px;border-width:1.5px;border-radius:14px 12px 15px 12px;box-shadow:2px 2px 0 var(--ink)}
+.prihead h3{font-size:1rem}
+.prihead .hand{font-size:.92rem}
+.pri > p.small{margin:2px 0 0 !important;font-size:.82rem;line-height:1.4}
+.prilist{margin:4px 0 0}
+.prilist li{padding:3px 0;gap:8px}
+.prilist .box{width:24px;height:24px;flex:0 0 auto}
+.prilist .box[aria-pressed="true"]::after{left:7px;top:2px;width:6px;height:11px}
+.prilist .nm{font-size:.95rem}
+.pmove{font-size:.9rem}
+.pdel{padding:2px 4px;font-size:.9rem}
+.priadd{margin-top:6px;gap:6px}
+.priadd input{padding:5px 10px;font-size:.92rem;border-radius:9px}
+.priadd .btn{padding:2px 14px;font-size:1rem;border-radius:9px}
+/* swipe areas */
+.mswipe,.daypanel{touch-action:pan-y pinch-zoom}
+/* phones: garden fits one screen (flower + water) */
+@media (max-width:600px){
+  .wrap{padding-top:8px}
+  header{position:relative;margin-bottom:0}
+  .theme{position:absolute;top:2px;right:0;margin:0;width:34px;height:34px;padding:0;text-align:center;line-height:1}
+  .theme .thl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  h1{font-size:clamp(1.7rem,8.2vw,2.3rem);padding:4px 36px 0}
+  .span{font-size:.95rem;margin-top:2px;line-height:1.3}
+  nav{margin:4px 0 8px}
+  nav button{padding:2px 10px 6px;font-size:1.1rem}
+  .seg{margin-bottom:6px}
+  .seg button{padding:3px 14px;font-size:1rem}
+  .mhead{margin-bottom:0}
+  .mhead .circ,.dayhead .circ{width:34px;height:34px}
+  .mt h2{font-size:1.3rem}
+  .mhead .mt p{font-size:.95rem;line-height:1.3}
+  .bq.one{max-width:min(420px,max(230px,calc(100vh - 330px)));max-width:min(420px,max(230px,calc(100svh - 330px)))}
+  .prog{margin-top:2px}
+  .hint{font-size:.95rem;margin-top:3px}
+  .water{margin-top:2px}
+  .wd{padding:2px}
+  .wd svg{width:20px;height:25px}
+}
+
 @media (prefers-reduced-motion:no-preference){
+  .sl-n{animation:slN .22s ease-out}
+  .sl-p{animation:slP .22s ease-out}
+  @keyframes slN{from{transform:translateX(28px);opacity:.25}to{transform:none;opacity:1}}
+  @keyframes slP{from{transform:translateX(-28px);opacity:.25}to{transform:none;opacity:1}}
   .box{transition:background-color .15s ease}
   .box[aria-pressed="true"]{animation:pop .22s ease}
   @keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
@@ -1340,6 +1396,21 @@ function progressHTML(){
     '<p class="hint">'+(water?drop:'')+'<span>'+hint+'</span></p>'+waterRow(ds,sc.water,future)+'</div>';
 }
 
+var slide=null;
+function onSwipe(el,prev,next){
+  if(!el||el._sw)return;el._sw=1;
+  var x0=null,y0=0,t0=0;
+  el.addEventListener("touchstart",function(e){
+    if(e.touches.length!==1||e.target.closest("input,textarea,select")){x0=null;return}
+    x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now();
+  },{passive:true});
+  el.addEventListener("touchend",function(e){
+    if(x0===null)return;
+    var tt=e.changedTouches[0],dx=tt.clientX-x0,dy=tt.clientY-y0;x0=null;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.5||Date.now()-t0>800)return;
+    if(dx<0)next();else prev();
+  },{passive:true});
+}
 function renderBouquet(){
   var el=document.getElementById("v-bouquet"),t=today(),yi=currentYearIdx();
   var mi=Math.max(0,monthIndex(t.slice(0,7))),count=mi-yi*12+1;
@@ -1356,7 +1427,7 @@ function renderBouquet(){
     top='<div class="mhead"><button class="circ" id="gpm" aria-label="Previous month"'+(ym<=firstYM()?" disabled":"")+'>‹</button>'+
       '<div class="mt"><h2>'+MONTHS[mm]+' '+yy+'</h2><p class="hand muted">'+st+' · <i class="dot" style="background:'+paletteFor(ym)[0]+'"></i>'+flowerName(ym)+' · '+daysIn(yy,mm)+' days</p></div>'+
       '<button class="circ" id="gnm" aria-label="Next month">›</button></div>';
-    s+=top+monthSVG(ym)+progressHTML();
+    s+='<div class="mswipe" id="mSwipe">'+top+monthSVG(ym)+'</div>'+progressHTML();
   }else{
     var shown=mode==="year"?12:Math.min(12,count+ahead);
     var over=mode==="year"?0:Math.max(0,count+ahead-12);
@@ -1409,16 +1480,19 @@ function renderBouquet(){
   var ap=document.getElementById("ahp"),am=document.getElementById("ahm");
   if(ap)ap.onclick=function(){setAhead(Math.min(12,(settings.ahead||0)+1))};
   if(am)am.onclick=function(){setAhead(Math.max(0,(settings.ahead||0)-1))};
-  function goMonth(n){
+  function goMonth(n,swiped){
     var ym=addMonths(ymOf(dayDs)<firstYM()?firstYM():ymOf(dayDs),n);
     if(ym<firstYM())return;
     dayDs=ym===today().slice(0,7)?today():ym+"-01";
+    slide={what:"m",dir:n};
     var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
+    if(swiped)return;
     var f=document.getElementById(n<0?"gpm":"gnm");if(f&&!f.disabled)f.focus({preventScroll:true});else{f=document.getElementById("gnm");if(f)f.focus({preventScroll:true})}
   }
   var pm=document.getElementById("gpm"),nm=document.getElementById("gnm");
   if(pm)pm.onclick=function(){goMonth(-1)};
   if(nm)nm.onclick=function(){goMonth(1)};
+  onSwipe(document.getElementById("mSwipe"),function(){goMonth(-1,true)},function(){goMonth(1,true)});
   el.querySelectorAll(".petal").forEach(function(g){
     g.addEventListener("click",function(){
       dayDs=g.getAttribute("data-ds");
@@ -1430,6 +1504,11 @@ function renderBouquet(){
   if(mode==="month"){}
   var tl=el.querySelector(".tolist");
   if(tl)tl.onclick=function(e){e.preventDefault();var dp=document.getElementById("dayPanel");if(dp)dp.scrollIntoView({behavior:"smooth",block:"start"})};
+  if(slide){
+    var tg=slide.what==="m"?document.querySelector("#mSwipe .bq"):document.getElementById("dayPanel");
+    if(tg)tg.classList.add(slide.dir>0?"sl-n":"sl-p");
+    slide=null;
+  }
 }
 
 function scorePetal(fill,op){
@@ -1570,11 +1649,13 @@ function renderDay(){
   var ctx=contextFor(ds);
   var fill=got?tierFill(tier.k,hue,ds):(ds<t&&ds>=settings.start?"url(#mottle)":null);
 
-  var h='<div class="dayhead"><div><h2>'+DOW[parse(ds).getDay()].slice(0,3)+', '+MONTHS[parse(ds).getMonth()]+' '+parse(ds).getDate()+'</h2>'+(ctx.line?'<p class="ctx">'+esc(ctx.line)+'</p>':'')+
-    (ctx.due?'<span class="due">'+esc(ctx.due)+'</span>':'')+'</div>'+
-    '<div class="dnav"><button class="chip sm" id="'+(editing?"doneEdit":"editDay")+'" aria-pressed="'+editing+'">'+(editing?"Done":"✎ Edit")+'</button>'+
-    '<button class="circ" id="dp" aria-label="Previous day">‹</button><button class="circ" id="dn" aria-label="Next day">›</button></div></div>'+
-    (ds!==t?'<button class="jump" id="dt">Back to today</button>':'');
+  var dueNow=ctx.due&&/tonight/.test(ctx.due);
+  var h='<div class="dayhead"><button class="circ" id="dp" aria-label="Previous day">‹</button>'+
+    '<div class="dmid"><h2>'+DOW[parse(ds).getDay()].slice(0,3)+', '+MONTHS[parse(ds).getMonth()]+' '+parse(ds).getDate()+'</h2>'+(ctx.line?'<p class="ctx">'+esc(ctx.line)+'</p>':'')+
+    '<div class="dtags">'+(ctx.due?'<span class="due'+(dueNow?' now':'')+'">'+esc(ctx.due)+'</span>':'')+
+    '<button class="chip sm" id="'+(editing?"doneEdit":"editDay")+'" aria-pressed="'+editing+'">'+(editing?"Done":"✎ Edit")+'</button>'+
+    (ds!==t?'<button class="jump" id="dt">Back to today</button>':'')+'</div></div>'+
+    '<button class="circ" id="dn" aria-label="Next day">›</button></div>';
 
   if(ds<settings.start){
     h+='<p class="muted" style="margin-top:18px">This is before you started tracking, so this section stays pale green. You can move your start date in Settings.</p>';
@@ -1604,8 +1685,7 @@ function renderDay(){
           '<button class="linkbtn" data-restore="'+x.it.id+'" data-scope="'+x.scope+'">Restore</button></li>'}).join("")+'</ul></div>';
     }
   }else if(!tasks.length){
-    h+='<div class="empty"><p>No tasks on this day yet, so today\u2019s color comes from your water drops.</p><button class="btn" id="startEdit">✎ Build this day</button>'+
-      (settings.builtin?'':'<p class="small muted">Or load the sample student plan in Settings.</p>')+'</div>';
+    h+='<div class="empty"><p>No tasks on this day yet, so today\u2019s color comes from your water drops.</p><button class="btn" id="startEdit">✎ Build this day</button>'+'</div>';
   }else{
     var part="";
     h+='<div>';
@@ -1629,9 +1709,11 @@ function renderDay(){
     moodGrid(ds);
   el.innerHTML=h;
 
-  function redraw(focusSel){var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var n=document.querySelector(focusSel);if(n)n.focus({preventScroll:true})}
-  document.getElementById("dp").onclick=function(){dayDs=addDays(dayDs,-1);redraw("#dp")};
-  document.getElementById("dn").onclick=function(){dayDs=addDays(dayDs,1);redraw("#dn")};
+  function redraw(focusSel){var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var n=focusSel&&document.querySelector(focusSel);if(n)n.focus({preventScroll:true})}
+  function goDay(n,swiped){dayDs=addDays(dayDs,n);slide={what:"d",dir:n};redraw(swiped?null:(n<0?"#dp":"#dn"))}
+  document.getElementById("dp").onclick=function(){goDay(-1)};
+  document.getElementById("dn").onclick=function(){goDay(1)};
+  onSwipe(el,function(){goDay(-1,true)},function(){goDay(1,true)});
   var dt=document.getElementById("dt");if(dt)dt.onclick=function(){dayDs=today();redraw("#dp")};
   var pf=document.getElementById("priForm");
   if(pf)pf.onsubmit=function(e){
@@ -1693,11 +1775,8 @@ function renderPlan(){
     '</div><button class="btn" id="sv">Save times</button> <span class="hand muted" id="svm"></span></div>'+
     '<div class="card"><h3>Your routine</h3>'+
     '<p class="small muted">To add, change or remove tasks, open any day and tap <b>✎ Edit</b>. Changes can apply to one day, one weekday, weekdays, or every day.</p>'+
-    '<p class="small">'+(settings.builtin?"You\u2019re using the sample student plan. ":"Your days are built from your own tasks. ")+routineSummary()+'</p>'+
-    '<div class="btnrow">'+(settings.builtin
-      ?'<button class="btn ghost" id="rr">Undo my changes to the sample plan</button><button class="btn ghost" id="rblank">Start with blank days</button>'
-      :'<button class="btn ghost" id="rr">Clear my routine</button><button class="btn ghost" id="rsample">Load the sample student plan</button>')+
-    '</div><p class="small muted" style="margin-top:8px">Already have a routine from another browser? Use <b>Restore from backup</b> below.</p></div>'+
+    '<p class="small">'+routineSummary()+'</p>'+
+    '<p class="small muted" style="margin-top:8px">Already have a routine from another browser? Use <b>Restore from backup</b> below.</p></div>'+
     '<div class="card data" id="dataCard"><h3>Your data</h3>'+
     '<p class="small muted">Progress lives in this browser only. '+(settings.lastBackup?'Last backup: '+fmtShort(settings.lastBackup)+'.':'You haven\u2019t made a backup yet.')+'</p>'+
     '<div class="btnrow"><button class="btn" id="ex">Download backup</button><button class="btn ghost" id="im">Restore from backup</button></div>'+
@@ -1727,15 +1806,6 @@ function renderPlan(){
     download("year-in-bloom-"+today()+".ics",buildICS(document.getElementById("icsWhat").value,+document.getElementById("icsDays").value),"text/calendar");
     bm.textContent="Calendar file downloaded — open it to add the events";
   };
-  function resetRoutine(builtin,msg){
-    if(!confirm(msg))return;
-    routine={add:{},hide:{},edit:{}};
-    Object.keys(dayx).forEach(function(k){var p=dayx[k].pri;dayx[k]=p&&p.length?{pri:p}:{};});
-    settings.builtin=builtin;rescore(today());saveLocal();renderPlan();
-  }
-  document.getElementById("rr").onclick=function(){resetRoutine(settings.builtin,"Remove all your added, edited and removed tasks? Priorities and past colors stay.")};
-  var rb=document.getElementById("rblank");if(rb)rb.onclick=function(){resetRoutine(false,"Clear the sample plan and your changes so every day starts empty? Priorities and past colors stay.")};
-  var rs=document.getElementById("rsample");if(rs)rs.onclick=function(){resetRoutine(true,"Replace your routine with the sample student plan (study sprints, workouts, cooking and cleaning)? Priorities and past colors stay.")};
   document.getElementById("im").onclick=function(){document.getElementById("imf").click()};
   document.getElementById("imf").onchange=function(e){
     var f=e.target.files[0];if(!f)return;
@@ -1764,7 +1834,7 @@ function routineSummary(){
   for(k in routine.add)n+=routine.add[k].length;
   for(k in routine.edit)e+=Object.keys(routine.edit[k]).length;
   for(k in routine.hide)r+=routine.hide[k].length;
-  if(!n&&!e&&!r)return "You\u2019re using the original plan.";
+  if(!n&&!e&&!r)return "No changes to your routine yet.";
   return "Your changes: "+n+" added, "+e+" edited, "+r+" removed (counted per weekday).";
 }
 function csvCell(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
@@ -1805,7 +1875,7 @@ function applyTheme(){
   var th=settings.theme||"auto",root=document.documentElement;
   if(th==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",th);
   var btn=document.getElementById("themeBtn");
-  btn.textContent=th==="light"?"☀ Day":th==="dark"?"☾ Night":"◐ Auto";
+  btn.innerHTML=th==="light"?'☀<span class="thl"> Day</span>':th==="dark"?'☾<span class="thl"> Night</span>':'◐<span class="thl"> Auto</span>';
   btn.setAttribute("aria-label","Theme: "+(th==="light"?"day":th==="dark"?"night":"automatic")+". Tap to change.");
   var dark=th==="dark"||(th==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);
   var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?"#191917":"#FFFFFD";
