@@ -402,9 +402,24 @@ footer{margin-top:40px;text-align:center;font-family:var(--hand);color:var(--ink
 
 /* ---- v2: due pill, day header, compact priorities ---- */
 .due{margin-top:0;padding:1px 11px;border:1.5px solid var(--ink);background:#FFE58A;color:#141414;
-  box-shadow:2px 2px 0 var(--ink);transform:rotate(-1.2deg);font-size:1rem;line-height:1.5}
-.due.now{background:#FFB547;font-weight:700}
-.due.now::before{content:"";display:inline-block;width:.5em;height:.5em;border-radius:50%;background:#C2410C;margin-right:6px;vertical-align:1px}
+  box-shadow:2px 2px 0 var(--ink);font-size:1rem;line-height:1.5}
+button.due{display:inline-flex;align-items:baseline;gap:7px;max-width:100%;transform:none;cursor:pointer;font-family:var(--hand)}
+.due .nt{flex:0 0 auto;opacity:.7}
+.due .nn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.due:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.duel{font-size:.95rem !important;margin-top:0 !important}
+.duel.now{color:var(--ink);font-weight:700}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px}
+.pills .due{min-width:0;max-width:100%}
+.due.late{background:#F9C4B6;border-style:dashed}
+.due.late .nt{opacity:1;color:#9A2A14;font-weight:700}
+.due.more{font-size:.92rem}
+.due.cur{background:#B8E3A8}
+.due.cur .nt{opacity:1;font-weight:700}
+.dmid .jump{margin-top:6px}
+ul.items li{scroll-margin:80px 0}
+ul.items li.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%,35%{background:#FFE58A66}100%{background:transparent}}
 .dayhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .dmid{flex:1;min-width:0;text-align:center}
 .dmid h2{margin:0}
@@ -1650,11 +1665,29 @@ function renderDay(){
   var fill=got?tierFill(tier.k,hue,ds):(ds<t&&ds>=settings.start?"url(#mottle)":null);
 
   var dueNow=ctx.due&&/tonight/.test(ctx.due);
+  var nowM=new Date().getHours()*60+new Date().getMinutes();
+  var todo=its.filter(function(it){return !it.pri&&!it.info&&c.indexOf(it.id)<0});
+  var late=ds===t?todo.filter(function(it){return it.t+(it.dur||0)<=nowM}):ds<t?todo.slice():[];
+  var nxt=ds<t?null:todo.filter(function(it){return ds!==t||it.t+(it.dur||0)>nowM})[0];
+  function pill(it,kind){
+    var lbl=kind==="now"?"Now":fmtTime(it.t);
+    return '<button class="due'+(kind==="late"?" late":kind==="now"?" cur":"")+'" data-go="'+it.id+'" aria-label="'+
+      (kind==="late"?"Overdue, not checked: ":kind==="now"?"Happening now: ":"Next: ")+esc(it.name)+' at '+fmtTime(it.t)+'. Go to it in the schedule">'+
+      '<span class="nt">'+lbl+'</span><span class="nn">'+esc(it.name)+'</span></button>';
+  }
+  var pills="";
+  if(!editing){
+    var shownLate=late.slice(-2),hiddenLate=late.length-shownLate.length;
+    if(hiddenLate>0)pills+='<button class="due late more" data-go="'+late[0].id+'" aria-label="'+hiddenLate+' more overdue, go to the earliest">+'+hiddenLate+' earlier</button>';
+    pills+=shownLate.map(function(it){return pill(it,"late")}).join("");
+    if(nxt)pills+=pill(nxt,ds===t&&nxt.t<=nowM?"now":"next");
+  }
   var h='<div class="dayhead"><button class="circ" id="dp" aria-label="Previous day">‹</button>'+
     '<div class="dmid"><h2>'+DOW[parse(ds).getDay()].slice(0,3)+', '+MONTHS[parse(ds).getMonth()]+' '+parse(ds).getDate()+'</h2>'+(ctx.line?'<p class="ctx">'+esc(ctx.line)+'</p>':'')+
-    '<div class="dtags">'+(ctx.due?'<span class="due'+(dueNow?' now':'')+'">'+esc(ctx.due)+'</span>':'')+
+    (ctx.due?'<p class="ctx duel'+(dueNow?' now':'')+'">'+esc(ctx.due)+'</p>':'')+
+    (pills?'<div class="pills">'+pills+'</div>':'')+'<div class="dtags">'+
     '<button class="chip sm" id="'+(editing?"doneEdit":"editDay")+'" aria-pressed="'+editing+'">'+(editing?"Done":"✎ Edit")+'</button>'+
-    (ds!==t?'<button class="jump" id="dt">Back to today</button>':'')+'</div></div>'+
+    '</div>'+(ds!==t?'<button class="jump" id="dt">Back to today</button>':'')+'</div>'+
     '<button class="circ" id="dn" aria-label="Next day">›</button></div>';
 
   if(ds<settings.start){
@@ -1695,7 +1728,7 @@ function renderDay(){
       var on=c.indexOf(it.id)>-1;
       var tag=it.custom==="day"?'<span class="custom-tag">today only</span>':'';
       var pp='<span class="pp" aria-hidden="true">'+new Array(it.pts+1).join("<i></i>")+'</span>';
-      h+='<li class="'+(on?"on ":"")+(it.cat==="brk"?"brk":"")+'"><span class="t">'+fmtTime(it.t)+'</span>'+
+      h+='<li id="row-'+it.id+'" class="'+(on?"on ":"")+(it.cat==="brk"?"brk":"")+'"><span class="t">'+fmtTime(it.t)+'</span>'+
         '<button class="box" data-id="'+it.id+'" aria-pressed="'+on+'"'+(future?" disabled":"")+' aria-label="'+esc(it.name)+', '+it.pts+' point'+(it.pts>1?"s":"")+'"></button>'+
         '<div class="it"><span class="nm">'+esc(it.name)+pp+tag+'</span>'+(it.sub?'<span class="sb">'+esc(it.sub)+' · '+it.dur+' min</span>':'<span class="sb">'+it.dur+' min</span>')+'</div></li>';
     });
@@ -1710,6 +1743,13 @@ function renderDay(){
   el.innerHTML=h;
 
   function redraw(focusSel){var y=window.scrollY;renderBouquet();window.scrollTo(0,y);var n=focusSel&&document.querySelector(focusSel);if(n)n.focus({preventScroll:true})}
+  el.querySelectorAll(".pills [data-go]").forEach(function(nu){nu.onclick=function(){
+    var row=document.getElementById("row-"+nu.getAttribute("data-go"));if(!row)return;
+    var rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    row.scrollIntoView({behavior:rm?"auto":"smooth",block:"center"});
+    row.classList.remove("flash");void row.offsetWidth;row.classList.add("flash");
+    var b=row.querySelector(".box");if(b)setTimeout(function(){b.focus({preventScroll:true})},rm?0:450);
+  }});
   function goDay(n,swiped){dayDs=addDays(dayDs,n);slide={what:"d",dir:n};redraw(swiped?null:(n<0?"#dp":"#dn"))}
   document.getElementById("dp").onclick=function(){goDay(-1)};
   document.getElementById("dn").onclick=function(){goDay(1)};
@@ -1915,6 +1955,12 @@ document.querySelectorAll("nav button").forEach(function(b){
   });
 });
 
+setInterval(function(){
+  if(view!=="bouquet"||dayDs!==today()||editing)return;
+  var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
+  if(document.getElementById("dlg").open)return;
+  var y=window.scrollY;renderBouquet();window.scrollTo(0,y);
+},60000);
 loadLocal();
 if(!settings.start)settings.start=today();
 applyTheme();
